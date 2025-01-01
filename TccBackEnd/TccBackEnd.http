@@ -1,0 +1,6 @@
+@TccBackEnd_HostAddress = http://localhost:5276
+
+GET {{TccBackEnd_HostAddress}}/api/AgenciaEventos/ObterPorId(1)
+Accept: application/json
+
+###
