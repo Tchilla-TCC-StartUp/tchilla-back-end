@@ -1,6 +1,7 @@
 using Npgsql;
 using TccBackEnd.Domain.Entities;
 using TccBackEnd.Domain.Interfaces;
+using TccBackEnd.Shared.Result;
 
 namespace TccBackEnd.Infra.Postgres.Repository;
 
@@ -11,7 +12,7 @@ public class AgenciaEventosRepository : IAgenciaEventosRepository
     {
         _connectionString = connectionString;
     }
-    public async Task<int> CadastrarAgenciaEventos(AgenciaEventos agencia)
+    public async Task<Result<int>> CadastrarAgenciaEventos(AgenciaEventos agencia)
     {
         using (var connection = new NpgsqlConnection(_connectionString))
         {
