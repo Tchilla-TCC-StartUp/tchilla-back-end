@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using TccBackEnd.Service;
 using TccBackEnd.Shared.Result;
 using TccBackEnd.UseCases.AgenciaEventos.Atualizar;
 using TccBackEnd.UseCases.AgenciaEventos.Cadastrar;
 using TccBackEnd.UseCases.AgenciaEventos.Dtos;
+using TccBackEnd.UseCases.AgenciaEventos.ObterPorId;
+using TccBackEnd.UseCases.AgenciaEventos.ObterTodas;
 
 namespace TccBackEnd.Controllers;
 
@@ -11,33 +14,51 @@ namespace TccBackEnd.Controllers;
 public class AgenciaEventosController : ControllerBase
 {
     private readonly ILogger<AgenciaEventosController> _logger;
-    private readonly CadastrarAgenciaEventosUseCase _cadastrarAgenciaEventosUseCase;
-    private readonly AtualizarAgenciaEventosUseCase _atualizarAgenciaEventosUseCase;
-    public AgenciaEventosController(CadastrarAgenciaEventosUseCase cadastrarAgenciaEventosUseCase)
+    private readonly AgenciaEventosService _agenciaEventosService;
+    public AgenciaEventosController(ILogger<AgenciaEventosController> logger, AgenciaEventosService agenciaEventosService)
     {
-        _cadastrarAgenciaEventosUseCase = cadastrarAgenciaEventosUseCase;
+        _logger = logger;
+        _agenciaEventosService = agenciaEventosService;
     }
 
-    [HttpPost]
+    [HttpPost("/cadastrar")]
     public async Task<IActionResult> Cadastrar([FromBody] CadastrarAgenciaEventosDto dto)
     {
-        Result<string> result = await _cadastrarAgenciaEventosUseCase.Executar(dto);
-        _logger.LogInformation($"Agencia de eventos cadastrada com sucesso");
+        Result<string> result = await _agenciaEventosService.Cadastrar.Executar(dto);
+        _logger.LogInformation($"Solicitação de cadastramento de Agencia de eventos");
         return (result.IsSuccess) ? CreatedAtAction(nameof(Cadastrar), result, null) : BadRequest(new {Error = result.ErrorMessage});
     }
 
-    [HttpPut]
+    [HttpPut("/atualizar")]
     public async Task<IActionResult> Atualizar([FromBody] AtualizarAgenciaEventosDto dto)
     {
-        Result<string> result = await _atualizarAgenciaEventosUseCase.Executar(dto);
-        _logger.LogInformation($"Agencia de eventos cadastrada com sucesso");
-        return (result.IsSuccess) ? CreatedAtAction(nameof(Cadastrar), result, null) : BadRequest(new {Error = result.ErrorMessage});
+        Result<string> result = await _agenciaEventosService.Atualizar.Executar(dto);
+        _logger.LogInformation($"Solicitação de atualização de Agencia de eventos");
+        return (result.IsSuccess) ? CreatedAtAction(nameof(Atualizar), result, null) : BadRequest(new {Error = result.ErrorMessage});
     }
     
-    [HttpGet]
+    [HttpGet("/obterPorId")]
     public async Task<IActionResult> ObterPorId([FromQuery] long id)
     {
-        //Result<AgenciaEventosOutputDto?> result = await 
+        Result<AgenciaEventosOutputDto?> result = await _agenciaEventosService.ObterPorId.Executar(id);
+        _logger.LogInformation($"Solicitação de obtenção de Agencia de eventos");
+        return (result.IsSuccess) ? CreatedAtAction(nameof(ObterPorId), result, null) : BadRequest(new {Error = result.ErrorMessage});
+    }
+    
+    [HttpGet("/obterTodos")]
+    public async Task<IActionResult> ObterTodos()
+    {
+        Result<List<AgenciaEventosOutputDto?>> result = await _agenciaEventosService.ObterTodas.Executar();
+        _logger.LogInformation($"Solicitação de obtenção de  todas Agencias de eventos");
+        return (result.IsSuccess) ? CreatedAtAction(nameof(ObterTodos), result, null) : BadRequest(new {Error = result.ErrorMessage});
+    }
+    
+    [HttpGet("/ObterTodasPorPesquisa")]
+    public async Task<IActionResult> ObterTodasPorPesquisa([FromQuery] string consulta)
+    {
+        Result<List<AgenciaEventosOutputDto>?> result = await _agenciaEventosService.ObterTodasPorPesquisa.Executar(consulta);
+        _logger.LogInformation($"Solicitação de obtenção de Agencia de eventos");
+        return (result.IsSuccess) ? CreatedAtAction(nameof(ObterTodasPorPesquisa), result, null) : BadRequest(new {Error = result.ErrorMessage});
     }
     
     

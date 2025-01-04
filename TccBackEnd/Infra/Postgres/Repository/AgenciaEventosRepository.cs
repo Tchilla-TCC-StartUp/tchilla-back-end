@@ -20,7 +20,7 @@ public class AgenciaEventosRepository : IAgenciaEventosRepository
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var query = "INSERT INTO AGENCIAEVENTOS(nome, nif) VALUES (@nome, @nif)";
+                var query = "Insert INTO AGENCIAEVENTOS(nome, nif) VALUES (@nome, @nif)";
                 using (var command = new NpgsqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@nome", agencia.Nome);
@@ -92,15 +92,94 @@ public class AgenciaEventosRepository : IAgenciaEventosRepository
                 }
             }
             
-            return Result<AgenciaEventosOutputDto>.Success(agenciaEventosOutputDto, "AgenciaEvento com sucesso");
+            return Result<AgenciaEventosOutputDto>.Success(agenciaEventosOutputDto, "Obtida Agencia de Eventos com sucesso");
         }
         catch (Exception e)
         {
-            return Result<AgenciaEventosOutputDto>.Error($"Erro ao Pegar AgenciaEventos: {e.Message}");
+            return Result<AgenciaEventosOutputDto>.Error($"Erro ao obter AgenciaEventos: {e.Message}");
         }
-        
     }
-    
-    
 
+    public async Task<Result<List<AgenciaEventosOutputDto>?>> ObterTodasAgenciasEventos()
+    {
+        List<AgenciaEventosOutputDto>? agenciasEventosOutputDtos = new List<AgenciaEventosOutputDto>();
+        try
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var query = "SELECT * FROM AGENCIAEVENTOS;";
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while(await reader.ReadAsync())
+                        {
+                            agenciasEventosOutputDtos = new List<AgenciaEventosOutputDto>()
+                            {
+                                new AgenciaEventosOutputDto()
+                                {
+                                    Id = reader.GetInt64(0),
+                                    Nif = reader.GetString(1),
+                                    Nome = reader.GetString(2),
+                                    Email = reader.GetString(3),
+                                    Telefone = reader.GetString(4),
+                                    DataNascimento = reader.GetDateTime(5),
+                                    Avatar = reader.GetString(6)
+                                }
+                            };
+                        }
+                    }
+                }
+            }
+            
+            return Result<List<AgenciaEventosOutputDto>>.Success(agenciasEventosOutputDtos, "Obtidas todas Agencia de Eventos com sucesso");
+        }
+        catch (Exception e)
+        {
+            return Result<List<AgenciaEventosOutputDto>>.Error($"Erro ao obter Agencias de Eventos: {e.Message}");
+        }
+
+    }
+
+    public async Task<Result<List<AgenciaEventosOutputDto>?>> ObterTodasAgenciasEventosPorPesquisa(string consulta)
+    {
+        List<AgenciaEventosOutputDto>? agenciasEventosOutputDtos = new List<AgenciaEventosOutputDto>();
+        try
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var query = "SELECT * FROM AGENCIAEVENTOS;";
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while(await reader.ReadAsync())
+                        {
+                            agenciasEventosOutputDtos = new List<AgenciaEventosOutputDto>()
+                            {
+                                new AgenciaEventosOutputDto()
+                                {
+                                    Id = reader.GetInt64(0),
+                                    Nif = reader.GetString(1),
+                                    Nome = reader.GetString(2),
+                                    Email = reader.GetString(3),
+                                    Telefone = reader.GetString(4),
+                                    DataNascimento = reader.GetDateTime(5),
+                                    Avatar = reader.GetString(6)
+                                }
+                            };
+                        }
+                    }
+                }
+            }
+            
+            return Result<List<AgenciaEventosOutputDto>>.Success(agenciasEventosOutputDtos, "Obtidas todas Agencia de Eventos com sucesso");
+        }
+        catch (Exception e)
+        {
+            return Result<List<AgenciaEventosOutputDto>>.Error($"Erro ao obter Agencias de Eventos: {e.Message}");
+        }
+    }
 }

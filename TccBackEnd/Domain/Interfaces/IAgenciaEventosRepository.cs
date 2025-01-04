@@ -9,5 +9,7 @@ public interface IAgenciaEventosRepository
     Task<Result<string>> CadastrarAgenciaEventos(AgenciaEventos agencia);
     Task<Result<string>> AtualizarAgenciaEventos(AgenciaEventos agencia);
     Task<Result<AgenciaEventosOutputDto?>> ObterAgenciaEventosPorId(long id);
+    Task<Result<List<AgenciaEventosOutputDto>?>> ObterTodasAgenciasEventos();
+    Task<Result<List<AgenciaEventosOutputDto>?>> ObterTodasAgenciasEventosPorPesquisa(string consulta);
 }
 

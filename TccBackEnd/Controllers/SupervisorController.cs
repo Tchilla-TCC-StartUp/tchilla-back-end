@@ -15,7 +15,8 @@ public class SupervisorController : Controller
         _cadastrarSupervisorUseCase = cadastrarSupervisorUseCase;
     }
 
-    [HttpPost]
+    
+    [HttpPost("/cadastrar")]
     public async Task<IActionResult> Cadastrar([FromBody] CadastrarSupervisorDto dto)
     {
         try

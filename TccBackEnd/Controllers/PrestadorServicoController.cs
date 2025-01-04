@@ -14,7 +14,8 @@ public class PrestadorServicoController : Controller
         _cadastrarPrestadorServicoUseCase = _cadastrarPrestadorServicoUseCase;
     }
 
-    [HttpPost]
+    
+    [HttpPost("/cadastrar")]
     public async Task<IActionResult> Cadastrar(CadastrarPrestadorServicoDto dto)
     {
         try

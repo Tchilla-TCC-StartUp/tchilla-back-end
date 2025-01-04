@@ -1,6 +1,8 @@
 using Npgsql;
 using TccBackEnd.Domain.Entities;
 using TccBackEnd.Domain.Interfaces;
+using TccBackEnd.Shared.Result;
+using TccBackEnd.UseCases.Cliente.Dtos;
 
 namespace TccBackEnd.Infra.Postgres.Repository;
 
@@ -11,46 +13,92 @@ public class ClienteRepository : IClienteRepository
     {
         _connectionString = connectionString;
     }
-    public async Task<int> CadastrarCliente(Cliente cliente)
+    public async Task<Result<string>> CadastrarCliente(Cliente cliente)
     {
-        using (var connection = new NpgsqlConnection(_connectionString))
+        try
         {
-            await connection.OpenAsync();
-            var query = "INSERT INTO CLIENTE(NOME, NIF, TELEFONE) VALUES(@nome, @nif, @telefone)";
-            using (var command = new NpgsqlCommand(query, connection))
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
-                command.Parameters.AddWithValue("@nome", cliente.Nome);
-                command.Parameters.AddWithValue("@nif", cliente.Nome);
-                command.Parameters.AddWithValue("@telefone", cliente.Telefone);
-                return (int) await command.ExecuteNonQueryAsync();
+                await connection.OpenAsync();
+                var query = "INSERT INTO CLIENTE(NOME, NIF, TELEFONE) VALUES(@nome, @nif, @telefone)";
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@nome", cliente.Nome);
+                    command.Parameters.AddWithValue("@nif", cliente.Nome);
+                    command.Parameters.AddWithValue("@telefone", cliente.Telefone);
+                    await command.ExecuteNonQueryAsync();
+                }
             }
+
+            return Result<string>.Success($"Cadastrada AgenciaEventos com sucesso: {cliente.Nome}");
+        }
+        catch (Exception e)
+        {
+            return Result<string>.Error($"Erro ao Cadastrar AgenciaEventos: {e.Message}");
+        }
+
+        
+    }
+
+    public async Task<Result<string>> AtualizarCliente(Cliente cliente)
+    {
+        try
+        {
+            using (var connection = new NpgsqlConnection( _connectionString))
+            {
+                await connection.OpenAsync();
+                var query = "UPDATE CLIENTE SET nome = @nome, telefone = @telefone WHERE id = @id";
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@nome", cliente.Nome);
+                    command.Parameters.AddWithValue("@telefone", cliente.Telefone);
+                    command.Parameters.AddWithValue("@id", cliente.Id);
+                    
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+
+            return Result<string>.Success("Cliente Atualizado com sucesso");
+        }
+        catch (Exception e)
+        {
+            return Result<string>.Error($"Erro ao atualizar Cliente: {e.Message}");
         }
     }
 
-    public async Task<Cliente?> ObterClientePorId(long id)
+    public async Task<Result<ClienteOutputDto>> ObterClientePorId(long id)
     {
-        using (var connection = new NpgsqlConnection(_connectionString))
+        ClienteOutputDto? clienteOutputDto = new ClienteOutputDto();
+        try
         {
-            await connection.OpenAsync();
-            var query = "SELECT * FROM CLIENTE WHERE id = @id";
-            using (var command = new NpgsqlCommand(query, connection))
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
-                command.Parameters.AddWithValue("@id", id);
-                using (var reader = await command.ExecuteReaderAsync())
+                await connection.OpenAsync();
+                var query = "SELECT * FROM CLIENTE WHERE id = @id";
+                using (var command = new NpgsqlCommand(query, connection))
                 {
-                    if (await reader.ReadAsync())
+                    command.Parameters.AddWithValue("@id", id);
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        return new Cliente
+                        if (await reader.ReadAsync())
                         {
-                            Id = reader.GetInt64(0),
-                            Nome = reader.GetString(1),
-                            Nif = reader.GetString(2),
-                        };
+                            clienteOutputDto = new ClienteOutputDto()
+                            {
+                                Id = reader.GetInt64(0),
+                                Nome = reader.GetString(1),
+                                Nif = reader.GetString(2),
+                            };
+                        }
                     }
                 }
-
-                return null;
             }
+
+            return Result<ClienteOutputDto>.Success(clienteOutputDto, "Obtido Cliente com sucesso");
         }
+        catch (Exception e)
+        {
+            return Result<ClienteOutputDto>.Error($"Erro ao obter Cliente: {e.Message}");
+        }
+        
     }
 }

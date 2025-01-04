@@ -17,6 +17,7 @@ public class AtualizarAgenciaEventosUseCase
     {
         var agenciaEventos = new Domain.Entities.AgenciaEventos()
         {
+            Id = dto.Id,
             Nome = dto.Nome,
             Nif = dto.Nif,
             Telefone = dto.Telefone,

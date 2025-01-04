@@ -68,3 +68,4 @@
 /home/jesseingles/dev/School/TCC/TccBackEnd/obj/Debug/net8.0/TccBackEnd.pdb
 /home/jesseingles/dev/School/TCC/TccBackEnd/obj/Debug/net8.0/TccBackEnd.genruntimeconfig.cache
 /home/jesseingles/dev/School/TCC/TccBackEnd/obj/Debug/net8.0/ref/TccBackEnd.dll
+/home/jesseingles/dev/School/TCC/TccBackEnd/obj/Debug/net8.0/TccBackEnd.sourcelink.json
