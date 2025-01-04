@@ -101,4 +101,84 @@ public class ClienteRepository : IClienteRepository
         }
         
     }
+
+    public async Task<Result<List<ClienteOutputDto>?>> ObterTodosClientes()
+    {
+        List<ClienteOutputDto>? clientesOutputDtos = new List<ClienteOutputDto>();
+        try
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var query = "SELECT * FROM AGENCIAEVENTOS;";
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while(await reader.ReadAsync())
+                        {
+                            clientesOutputDtos = new List<ClienteOutputDto>()
+                            {
+                                new ClienteOutputDto()
+                                {
+                                    Id = reader.GetInt64(0),
+                                    Nif = reader.GetString(1),
+                                    Nome = reader.GetString(2),
+                                    Email = reader.GetString(3),
+                                    Telefone = reader.GetString(4),
+                                    Avatar = reader.GetString(5)
+                                }
+                            };
+                        }
+                    }
+                }
+            }
+            
+            return Result<List<ClienteOutputDto>>.Success(clientesOutputDtos, "Obtidas todas Agencia de Eventos com sucesso");
+        }
+        catch (Exception e)
+        {
+            return Result<List<ClienteOutputDto>>.Error($"Erro ao obter Agencias de Eventos: {e.Message}");
+        }
+    }
+
+    public async Task<Result<List<ClienteOutputDto>?>> ObterTodosClientesPorPesquisa(string consulta)
+    {
+        List<ClienteOutputDto>? clientesOutputDtos = new List<ClienteOutputDto>();
+        try
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var query = "SELECT * FROM AGENCIAEVENTOS;";
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while(await reader.ReadAsync())
+                        {
+                            clientesOutputDtos = new List<ClienteOutputDto>()
+                            {
+                                new ClienteOutputDto()
+                                {
+                                    Id = reader.GetInt64(0),
+                                    Nif = reader.GetString(1),
+                                    Nome = reader.GetString(2),
+                                    Email = reader.GetString(3),
+                                    Telefone = reader.GetString(4),
+                                    Avatar = reader.GetString(5)
+                                }
+                            };
+                        }
+                    }
+                }
+            }
+            
+            return Result<List<ClienteOutputDto>>.Success(clientesOutputDtos, "Obtidas todas Agencia de Eventos com sucesso");
+        }
+        catch (Exception e)
+        {
+            return Result<List<ClienteOutputDto>>.Error($"Erro ao obter Agencias de Eventos: {e.Message}");
+        }
+    }
 }

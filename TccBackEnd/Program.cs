@@ -9,6 +9,8 @@ using TccBackEnd.UseCases.AgenciaEventos.ObterTodasPorPesquisa;
 using TccBackEnd.UseCases.Cliente.Atualizar;
 using TccBackEnd.UseCases.Cliente.Cadastrar;
 using TccBackEnd.UseCases.Cliente.ObterPorId;
+using TccBackEnd.UseCases.Cliente.ObterTodos;
+using TccBackEnd.UseCases.Cliente.ObterTodosPorPesquisa;
 using TccBackEnd.UseCases.PrestadorServico.Cadastrar;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +29,8 @@ builder.Services.AddScoped<ClienteService>();
 builder.Services.AddScoped<CadastrarClienteUseCase>();
 builder.Services.AddScoped<AtualizarClienteUseCase>();
 builder.Services.AddScoped<ObterPorIdClienteUseCase>();
+builder.Services.AddScoped<ObterTodosClienteUseCase>();
+builder.Services.AddScoped<ObterTodosPorPesquisaClienteUseCase>();
 
 builder.Services.AddScoped<IPrestadorServicoRepository>(provider => new PrestadorServicoRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<CadastrarPrestadorServicoUseCase>();

@@ -9,4 +9,6 @@ public interface IClienteRepository
     Task<Result<string>> CadastrarCliente(Cliente cliente);
     Task<Result<string>> AtualizarCliente(Cliente cliente);
     Task<Result<ClienteOutputDto?>> ObterClientePorId(long id);
+    Task<Result<List<ClienteOutputDto>?>> ObterTodosClientes();
+    Task<Result<List<ClienteOutputDto>?>> ObterTodosClientesPorPesquisa(string consulta);
 }

@@ -21,7 +21,7 @@ public class AgenciaEventosController : ControllerBase
         _agenciaEventosService = agenciaEventosService;
     }
 
-    [HttpPost("/cadastrar")]
+    [HttpPost("cadastrar")]
     public async Task<IActionResult> Cadastrar([FromBody] CadastrarAgenciaEventosDto dto)
     {
         Result<string> result = await _agenciaEventosService.Cadastrar.Executar(dto);
@@ -29,7 +29,7 @@ public class AgenciaEventosController : ControllerBase
         return (result.IsSuccess) ? CreatedAtAction(nameof(Cadastrar), result, null) : BadRequest(new {Error = result.ErrorMessage});
     }
 
-    [HttpPut("/atualizar")]
+    [HttpPut("atualizar")]
     public async Task<IActionResult> Atualizar([FromBody] AtualizarAgenciaEventosDto dto)
     {
         Result<string> result = await _agenciaEventosService.Atualizar.Executar(dto);
@@ -37,7 +37,7 @@ public class AgenciaEventosController : ControllerBase
         return (result.IsSuccess) ? CreatedAtAction(nameof(Atualizar), result, null) : BadRequest(new {Error = result.ErrorMessage});
     }
     
-    [HttpGet("/obterPorId")]
+    [HttpGet("obterPorId")]
     public async Task<IActionResult> ObterPorId([FromQuery] long id)
     {
         Result<AgenciaEventosOutputDto?> result = await _agenciaEventosService.ObterPorId.Executar(id);
@@ -45,7 +45,7 @@ public class AgenciaEventosController : ControllerBase
         return (result.IsSuccess) ? CreatedAtAction(nameof(ObterPorId), result, null) : BadRequest(new {Error = result.ErrorMessage});
     }
     
-    [HttpGet("/obterTodos")]
+    [HttpGet("obterTodos")]
     public async Task<IActionResult> ObterTodos()
     {
         Result<List<AgenciaEventosOutputDto?>> result = await _agenciaEventosService.ObterTodas.Executar();
@@ -53,13 +53,11 @@ public class AgenciaEventosController : ControllerBase
         return (result.IsSuccess) ? CreatedAtAction(nameof(ObterTodos), result, null) : BadRequest(new {Error = result.ErrorMessage});
     }
     
-    [HttpGet("/ObterTodasPorPesquisa")]
+    [HttpGet("ObterTodasPorPesquisa")]
     public async Task<IActionResult> ObterTodasPorPesquisa([FromQuery] string consulta)
     {
         Result<List<AgenciaEventosOutputDto>?> result = await _agenciaEventosService.ObterTodasPorPesquisa.Executar(consulta);
         _logger.LogInformation($"Solicitação de obtenção de Agencia de eventos");
         return (result.IsSuccess) ? CreatedAtAction(nameof(ObterTodasPorPesquisa), result, null) : BadRequest(new {Error = result.ErrorMessage});
     }
-    
-    
 }
