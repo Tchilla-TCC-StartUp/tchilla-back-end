@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using TccBackEnd.Shared.Result;
+using TccBackEnd.UseCases.AgenciaEventos.Atualizar;
 using TccBackEnd.UseCases.AgenciaEventos.Cadastrar;
 using TccBackEnd.UseCases.AgenciaEventos.Dtos;
 
@@ -10,6 +12,7 @@ public class AgenciaEventosController : ControllerBase
 {
     private readonly ILogger<AgenciaEventosController> _logger;
     private readonly CadastrarAgenciaEventosUseCase _cadastrarAgenciaEventosUseCase;
+    private readonly AtualizarAgenciaEventosUseCase _atualizarAgenciaEventosUseCase;
     public AgenciaEventosController(CadastrarAgenciaEventosUseCase cadastrarAgenciaEventosUseCase)
     {
         _cadastrarAgenciaEventosUseCase = cadastrarAgenciaEventosUseCase;
@@ -18,43 +21,23 @@ public class AgenciaEventosController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Cadastrar([FromBody] CadastrarAgenciaEventosDto dto)
     {
-        try
-        {
-            var id = await _cadastrarAgenciaEventosUseCase.Executar(dto);
-            _logger.Log(LogLevel.Information, $"Cadastrada Agencia de Eventos {id} com sucesso");
-            return CreatedAtAction(nameof(Cadastrar), new {id}, null);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new {Error = e.Message});
-        }
+        Result<string> result = await _cadastrarAgenciaEventosUseCase.Executar(dto);
+        _logger.LogInformation($"Agencia de eventos cadastrada com sucesso");
+        return (result.IsSuccess) ? CreatedAtAction(nameof(Cadastrar), result, null) : BadRequest(new {Error = result.ErrorMessage});
     }
 
     [HttpPut]
     public async Task<IActionResult> Atualizar([FromBody] AtualizarAgenciaEventosDto dto)
     {
-        try
-        {
-            
-            return CreatedAtAction(nameof(Atualizar), new { dto }, null);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new {Error = e.Message});
-        }
+        Result<string> result = await _atualizarAgenciaEventosUseCase.Executar(dto);
+        _logger.LogInformation($"Agencia de eventos cadastrada com sucesso");
+        return (result.IsSuccess) ? CreatedAtAction(nameof(Cadastrar), result, null) : BadRequest(new {Error = result.ErrorMessage});
     }
     
     [HttpGet]
     public async Task<IActionResult> ObterPorId([FromQuery] long id)
     {
-        try
-        {
-            return CreatedAtAction(nameof(ObterPorId), "ksks", null);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(new {Error = e.Message});
-        }
+        //Result<AgenciaEventosOutputDto?> result = await 
     }
     
     

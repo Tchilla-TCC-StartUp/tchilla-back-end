@@ -1,5 +1,6 @@
 using TccBackEnd.Domain.Interfaces;
 using TccBackEnd.Infra.Postgres.Repository;
+using TccBackEnd.UseCases.AgenciaEventos.Atualizar;
 using TccBackEnd.UseCases.AgenciaEventos.Cadastrar;
 using TccBackEnd.UseCases.Cliente.Cadastrar;
 using TccBackEnd.UseCases.PrestadorServico.Cadastrar;
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Reposistories and Use Cases configuration
 builder.Services.AddScoped<IAgenciaEventosRepository>(provider => new AgenciaEventosRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<CadastrarAgenciaEventosUseCase>();
+builder.Services.AddScoped<AtualizarAgenciaEventosUseCase>();
 
 builder.Services.AddScoped<IClienteRepository>(provider => new ClienteRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<CadastrarClienteUseCase>();
