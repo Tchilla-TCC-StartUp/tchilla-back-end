@@ -1,5 +1,6 @@
 using TccBackEnd.Domain.Entities;
 using TccBackEnd.Domain.Interfaces;
+using TccBackEnd.Shared.Result;
 using TccBackEnd.UseCases.AgenciaEventos.Dtos;
 
 namespace TccBackEnd.UseCases.AgenciaEventos.Cadastrar;
@@ -13,7 +14,7 @@ public class CadastrarAgenciaEventosUseCase
         _agenciaEventosRepository = agenciaEventosRepository;
     }
 
-    public async Task<int> Executar(CadastrarAgenciaEventosDto dto)
+    public async Task<Result<string>> Executar(CadastrarAgenciaEventosDto dto)
     {
         var agenciaEventos = new Domain.Entities.AgenciaEventos()
         {
@@ -22,6 +23,6 @@ public class CadastrarAgenciaEventosUseCase
             Telefone = dto.Telefone,
             Email = dto.Email
         };
-        return (int) await _agenciaEventosRepository.CadastrarAgenciaEventos(agenciaEventos);
+        return (Result<string>) await _agenciaEventosRepository.CadastrarAgenciaEventos(agenciaEventos);
     }
 }

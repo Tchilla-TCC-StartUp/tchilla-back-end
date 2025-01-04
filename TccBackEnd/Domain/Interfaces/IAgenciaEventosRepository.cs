@@ -6,8 +6,8 @@ namespace TccBackEnd.Domain.Interfaces;
 
 public interface IAgenciaEventosRepository
 {
-    Task<Result> CadastrarAgenciaEventos(AgenciaEventos agencia);
-    Task<bool> AtualizarAgenciaEventos(AgenciaEventos agencia);
+    Task<Result<string>> CadastrarAgenciaEventos(AgenciaEventos agencia);
+    Task<Result<string>> AtualizarAgenciaEventos(AgenciaEventos agencia);
     Task<Result<AgenciaEventosOutputDto?>> ObterAgenciaEventosPorId(long id);
 }
 

@@ -1,4 +1,5 @@
 using TccBackEnd.Domain.Interfaces;
+using TccBackEnd.Shared.Result;
 using TccBackEnd.UseCases.AgenciaEventos.Dtos;
 
 namespace TccBackEnd.UseCases.AgenciaEventos.Atualizar;
@@ -12,7 +13,7 @@ public class AtualizarAgenciaEventosUseCase
         _agenciaEventosRepository = agenciaEventosRepository;
     }
 
-    public async Task<bool> Executar(AtualizarAgenciaEventosDto dto)
+    public async Task<Result<string>> Executar(AtualizarAgenciaEventosDto dto)
     {
         var agenciaEventos = new Domain.Entities.AgenciaEventos()
         {
@@ -22,6 +23,6 @@ public class AtualizarAgenciaEventosUseCase
             Email = dto.Email
         };
         
-        return (bool) await _agenciaEventosRepository.AtualizarAgenciaEventos(agenciaEventos);
+        return (Result<string>) await _agenciaEventosRepository.AtualizarAgenciaEventos(agenciaEventos);
     }
 }
