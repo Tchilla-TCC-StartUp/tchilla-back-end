@@ -1,6 +1,6 @@
 namespace TccBackEnd.Shared.Result;
 
-public class Result<T>
+public class Result<T> 
 {
   public bool IsSuccess { get; set; }
   public string? Message { get; set; }
