@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TccBackEnd.Domain.Entities
 {
-    public class PrestadorServico
+    public class PrestadorProduto
     {
         public int Id { get; set;}
         public string Nome { get; set; }

@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 
 namespace TccBackEnd.Domain.Entities
 {
-    public class PrestadorServico
+    public class AgenciaComboServico
     {
-        public int Id { get; set;}
         public string Nome { get; set; }
-        public decimal preco { get; set; }
-        public required int PrestadorId { get; set; }
+        public required int AgenciaComboId  { get; set; }
+        public required int AgenciaServicoId { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 namespace TccBackEnd.Domain.Entities;
 
-public class AgenciaEventos
+public class Prestador
 {
     public long Id { get; set; }
     public string Nome { get; set; }
@@ -12,6 +12,6 @@ public class AgenciaEventos
     public DateTime DataCadastro { get; set; }
     public DateTime DataAlteracao { get; set; }
     public DateTime DataExclusao { get; set; }
-    public DateTime GoogleId { get; set; }
-    public DateTime FacebookId { get; set; }
+    public required int GoogleId { get; set; }
+    public required int FacebookId { get; set; }
 }
