@@ -9,6 +9,6 @@ namespace TccBackEnd.Domain.Entities
     {
         public string Nome { get; set; }
         public decimal preco { get; set; }
-        public required int AgecinciaId { get; set; }
+        public required int AgenciaId { get; set; }
     }
 }
