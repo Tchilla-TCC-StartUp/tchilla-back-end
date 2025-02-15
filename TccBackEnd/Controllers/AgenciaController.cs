@@ -11,11 +11,11 @@ namespace TccBackEnd.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AgenciaEventosController : ControllerBase
+public class AgenciaController : ControllerBase
 {
-    private readonly ILogger<AgenciaEventosController> _logger;
+    private readonly ILogger<AgenciaController> _logger;
     private readonly AgenciaEventosService _agenciaEventosService;
-    public AgenciaEventosController(ILogger<AgenciaEventosController> logger, AgenciaEventosService agenciaEventosService)
+    public AgenciaController(ILogger<AgenciaController> logger, AgenciaEventosService agenciaEventosService)
     {
         _logger = logger;
         _agenciaEventosService = agenciaEventosService;
