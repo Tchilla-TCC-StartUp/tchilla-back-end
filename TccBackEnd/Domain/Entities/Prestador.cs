@@ -12,6 +12,6 @@ public class Prestador
     public DateTime DataCadastro { get; set; }
     public DateTime DataAlteracao { get; set; }
     public DateTime DataExclusao { get; set; }
-    public required int GoogleId { get; set; }
-    public required int FacebookId { get; set; }
+    public  int GoogleId { get; set; }
+    public  int FacebookId { get; set; }
 }

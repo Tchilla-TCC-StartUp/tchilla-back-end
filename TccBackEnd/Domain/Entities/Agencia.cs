@@ -14,5 +14,5 @@ public class Agencia
     public DateTime DataAlteracao { get; set; }
     public DateTime DataExclusao { get; set; }
     public int GoogleId { get; set; }
-    public required int FacebookId { get; set; }
+    public int FacebookId { get; set; }
 }

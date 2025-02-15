@@ -1,3 +1,4 @@
+using TccBackEnd.Domain.Entities;
 using TccBackEnd.Domain.Interfaces;
 using TccBackEnd.UseCases.PrestadorServico.Dtos;
 
@@ -14,7 +15,7 @@ public class CadastrarPrestadorServicoUseCase
 
     public async Task<int> Executar(CadastrarPrestadorServicoDto dto)
     {
-        var prestadorServico = new Domain.Entities.PrestadorServico()
+        var prestadorServico = new Prestador()
         {
             Nome = dto.Nome,
             Email = dto.Email,

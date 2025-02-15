@@ -4,6 +4,6 @@ namespace TccBackEnd.Domain.Interfaces;
 
 public interface IPrestadorServicoRepository
 {
-    Task<int> CadastrarPrestadorServico(PrestadorServico prestadorServico);
+    Task<int> CadastrarPrestadorServico(Prestador prestadorServico);
     Task<PrestadorServico?> ObterPrestadorServicoPorId(long id);
 }
