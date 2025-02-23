@@ -105,3 +105,4 @@ C:/Users/peteusom/Desktop/Estudos/programacaoGeral/tchilla-back-end/TccBackEnd/o
 /home/jesseingles/dev/School/TCC/TccBackEnd/obj/Debug/net8.0/TccBackEnd.pdb
 /home/jesseingles/dev/School/TCC/TccBackEnd/obj/Debug/net8.0/TccBackEnd.genruntimeconfig.cache
 /home/jesseingles/dev/School/TCC/TccBackEnd/obj/Debug/net8.0/ref/TccBackEnd.dll
+/home/jesseingles/dev/School/TCC/TccBackEnd/bin/Debug/net8.0/TccBackEnd.staticwebassets.runtime.json
