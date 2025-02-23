@@ -16,7 +16,7 @@ public class CadastrarAgenciaEventosUseCase
 
     public async Task<Result<string>> Executar(CadastrarAgenciaEventosDto dto)
     {
-        var agenciaEventos = new Domain.Entities.AgenciaEventos()
+        var agenciaEventos = new Agencia()
         {
             Nome = dto.Nome,
             Nif = dto.Nif,

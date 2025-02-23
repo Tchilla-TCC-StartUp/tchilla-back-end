@@ -6,11 +6,13 @@ namespace TccBackEnd.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PrestadorServicoController : Controller
+public class PrestadorController : Controller
 {
+    private readonly ILogger<PrestadorController> _logger;
     private readonly CadastrarPrestadorServicoUseCase _cadastrarPrestadorServicoUseCase;
-    public PrestadorServicoController(CadastrarPrestadorServicoUseCase _cadastrarPrestadorServicoUseCase)
+    public PrestadorController(ILogger<PrestadorController> logger, CadastrarPrestadorServicoUseCase _cadastrarPrestadorServicoUseCase)
     {
+        _logger = logger;
         _cadastrarPrestadorServicoUseCase = _cadastrarPrestadorServicoUseCase;
     }
 

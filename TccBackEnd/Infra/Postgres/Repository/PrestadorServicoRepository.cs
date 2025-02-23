@@ -13,7 +13,7 @@ public class PrestadorServicoRepository : IPrestadorServicoRepository
     }
 
 
-    public async Task<int> CadastrarPrestadorServico(PrestadorServico prestadorServico)
+    public async Task<int> CadastrarPrestadorServico(Prestador prestadorServico)
     {
         using (var connection = new NpgsqlConnection(_connectionString))
         {

@@ -13,7 +13,7 @@ public class AgenciaEventosRepository : IAgenciaEventosRepository
     {
         _connectionString = connectionString;
     }
-    public async Task<Result<string>> CadastrarAgenciaEventos(AgenciaEventos agencia)
+    public async Task<Result<string>> CadastrarAgenciaEventos(Agencia agencia)
     {
         try
         {
@@ -39,7 +39,7 @@ public class AgenciaEventosRepository : IAgenciaEventosRepository
         
     }
 
-    public async Task<Result<string>> AtualizarAgenciaEventos(AgenciaEventos agencia)
+    public async Task<Result<string>> AtualizarAgenciaEventos(Agencia agencia)
     {
         try
         {

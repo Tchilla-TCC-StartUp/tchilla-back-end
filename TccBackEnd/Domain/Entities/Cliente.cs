@@ -12,6 +12,7 @@ public class Cliente
     public DateTime DataCadastro { get; set; }
     public DateTime DataAlteracao { get; set; }
     public DateTime DataExclusao { get; set; }
-    public DateTime GoogleId { get; set; }
-    public DateTime FacebookId { get; set; }
+    public int GoogleId { get; set; }
+    public int FacebookId { get; set; }
+    public virtual ICollection<Endereco> enderecoCliente { get; set;} = new List<Endereco>();
 }

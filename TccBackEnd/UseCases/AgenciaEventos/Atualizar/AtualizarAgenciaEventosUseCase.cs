@@ -1,3 +1,4 @@
+using TccBackEnd.Domain.Entities;
 using TccBackEnd.Domain.Interfaces;
 using TccBackEnd.Shared.Result;
 using TccBackEnd.UseCases.AgenciaEventos.Dtos;
@@ -15,7 +16,7 @@ public class AtualizarAgenciaEventosUseCase
 
     public async Task<Result<string>> Executar(AtualizarAgenciaEventosDto dto)
     {
-        var agenciaEventos = new Domain.Entities.AgenciaEventos()
+        var agenciaEventos = new Agencia()
         {
             Id = dto.Id,
             Nome = dto.Nome,
