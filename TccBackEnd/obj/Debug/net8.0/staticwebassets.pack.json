@@ -1,12 +1,20 @@
 {
   "Files": [
     {
-      "Id": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/Resources/images/House searching-cuate.png",
-      "PackagePath": "staticwebassets/Resources/images/House searching-cuate.png"
+      "Id": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/Resources/images/House searching-cuate.svg",
+      "PackagePath": "staticwebassets/Resources/images/House searching-cuate.svg"
+    },
+    {
+      "Id": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/Resources/images/Wedding planner-cuate.svg",
+      "PackagePath": "staticwebassets/Resources/images/Wedding planner-cuate.svg"
     },
     {
       "Id": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/Resources/images/Wedding-cuate.png",
       "PackagePath": "staticwebassets/Resources/images/Wedding-cuate.png"
+    },
+    {
+      "Id": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/Resources/images/Wedding-cuate.svg",
+      "PackagePath": "staticwebassets/Resources/images/Wedding-cuate.svg"
     },
     {
       "Id": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/Resources/images/Weddingplanner-cuate.png",
@@ -15,6 +23,10 @@
     {
       "Id": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/Resources/images/Welcome-cuate 1.png",
       "PackagePath": "staticwebassets/Resources/images/Welcome-cuate 1.png"
+    },
+    {
+      "Id": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/Resources/images/Welcome-cuate.svg",
+      "PackagePath": "staticwebassets/Resources/images/Welcome-cuate.svg"
     },
     {
       "Id": "obj/Debug/net8.0/staticwebassets/msbuild.TccBackEnd.Microsoft.AspNetCore.StaticWebAssets.props",

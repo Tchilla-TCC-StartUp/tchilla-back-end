@@ -54,19 +54,19 @@ public class ResourceController : Controller
                 new
                 {
                     titulo = "Economize tempo na sua busca.",
-                    url = $"{baseUrl}House searching-cuate.png",
+                    url = $"{baseUrl}House searching-cuate.svg",
                     descricao = "Com apenas alguns cliques, encontre o local ideal para qualquer evento social com as melhores opções."
                 },
                 new
                 {
                     titulo = "Serviços de decoração no pacote",
-                    url = $"{baseUrl}Weddingplanner-cuate.png",
+                    url = $"{baseUrl}Wedding planner-cuate.svg",
                     descricao = "Aproveite o momento para reservar o que deseja para o seu evento."
                 },
                 new
                 {
                     titulo = "Compare e avalie com confiança",
-                    url = $"{baseUrl}Wedding-cuate.png",
+                    url = $"{baseUrl}Wedding-cuate.svg",
                     descricao = "Escolha a melhor opção com base nas avaliações e comparações."
                 }
             },
@@ -75,19 +75,19 @@ public class ResourceController : Controller
                 new
                 {
                     title = "Save time in your search.",
-                    url = $"{baseUrl}House searching-cuate.png",
+                    url = $"{baseUrl}House searching-cuate.svg",
                     description = "With just a few clicks, find the ideal place for any social event with the best options."
                 },
                 new
                 {
                     title = "Decoration services included in the package",
-                    url = $"{baseUrl}Weddingplanner-cuate.png",
+                    url = $"{baseUrl}Wedding planner-cuate.svg",
                     description = "Take advantage of the moment to book what you need for your event."
                 },
                 new
                 {
                     title = "Compare and evaluate with confidence",
-                    url = $"{baseUrl}Wedding-cuate.png",
+                    url = $"{baseUrl}Wedding-cuate.svg",
                     description = "Choose the best option based on reviews and comparisons."
                 }
             }
