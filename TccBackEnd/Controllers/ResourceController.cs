@@ -31,9 +31,9 @@ public class ResourceController : Controller
             },
             ["en"] = new
             {
-                title = "Welcome to Tchilla",
+                titulo = "Welcome to Tchilla",
                 url = $"{baseUrl}Welcome-cuate 1.png",
-                description = "We are grateful that you downloaded our app. Create an account, log in, or explore the app."
+                descricao = "We are grateful that you downloaded our app. Create an account, log in, or explore the app."
             }
         };
 
@@ -86,9 +86,9 @@ public class ResourceController : Controller
                 },
                 new
                 {
-                    title = "Compare and evaluate with confidence",
+                    titulo = "Compare and evaluate with confidence",
                     url = $"{baseUrl}Wedding-cuate.svg",
-                    description = "Choose the best option based on reviews and comparisons."
+                    descricao = "Choose the best option based on reviews and comparisons."
                 }
             }
         };
