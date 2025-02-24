@@ -26,13 +26,13 @@ public class ResourceController : Controller
             ["pt"] = new
             {
                 title = "Seja bem-vindo ao Tchilla",
-                url = $"{baseUrl}Welcome-cuate 1.png",
+                url = $"{baseUrl}Welcome-cuate.svg",
                 description = "Estamos gratos por ter baixado o nosso aplicativo. Crie uma conta, faça login ou explore o app."
             },
             ["en"] = new
             {
                 title = "Welcome to Tchilla",
-                url = $"{baseUrl}Welcome-cuate 1.png",
+                url = $"{baseUrl}Welcome-cuate.svg",
                 description = "We are grateful that you downloaded our app. Create an account, log in, or explore the app."
             }
         };
