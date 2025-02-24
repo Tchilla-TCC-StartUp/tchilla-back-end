@@ -25,15 +25,15 @@ public class ResourceController : Controller
         {
             ["pt"] = new
             {
-                titulo = "Seja bem-vindo ao Tchilla",
+                title = "Seja bem-vindo ao Tchilla",
                 url = $"{baseUrl}Welcome-cuate 1.png",
-                descricao = "Estamos gratos por ter baixado o nosso aplicativo. Crie uma conta, faça login ou explore o app."
+                description = "Estamos gratos por ter baixado o nosso aplicativo. Crie uma conta, faça login ou explore o app."
             },
             ["en"] = new
             {
-                titulo = "Welcome to Tchilla",
+                title = "Welcome to Tchilla",
                 url = $"{baseUrl}Welcome-cuate 1.png",
-                descricao = "We are grateful that you downloaded our app. Create an account, log in, or explore the app."
+                description = "We are grateful that you downloaded our app. Create an account, log in, or explore the app."
             }
         };
 
@@ -53,21 +53,21 @@ public class ResourceController : Controller
             {
                 new
                 {
-                    titulo = "Economize tempo na sua busca.",
+                    title = "Economize tempo na sua busca.",
                     url = $"{baseUrl}House searching-cuate.svg",
-                    descricao = "Com apenas alguns cliques, encontre o local ideal para qualquer evento social com as melhores opções."
+                    description = "Com apenas alguns cliques, encontre o local ideal para qualquer evento social com as melhores opções."
                 },
                 new
                 {
-                    titulo = "Serviços de decoração no pacote",
+                    title = "Serviços de decoração no pacote",
                     url = $"{baseUrl}Wedding planner-cuate.svg",
-                    descricao = "Aproveite o momento para reservar o que deseja para o seu evento."
+                    description = "Aproveite o momento para reservar o que deseja para o seu evento."
                 },
                 new
                 {
-                    titulo = "Compare e avalie com confiança",
+                    title = "Compare e avalie com confiança",
                     url = $"{baseUrl}Wedding-cuate.svg",
-                    descricao = "Escolha a melhor opção com base nas avaliações e comparações."
+                    description = "Escolha a melhor opção com base nas avaliações e comparações."
                 }
             },
             ["en"] = new List<object>
@@ -86,9 +86,9 @@ public class ResourceController : Controller
                 },
                 new
                 {
-                    titulo = "Compare and evaluate with confidence",
+                    title = "Compare and evaluate with confidence",
                     url = $"{baseUrl}Wedding-cuate.svg",
-                    descricao = "Choose the best option based on reviews and comparisons."
+                    description = "Choose the best option based on reviews and comparisons."
                 }
             }
         };
