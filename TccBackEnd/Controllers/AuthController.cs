@@ -14,11 +14,11 @@ namespace TccBackEnd.Controllers;
 public class AuthController : ControllerBase
 {
   private readonly ILogger<AuthController> _logger;
-  private readonly AgenciaEventosService _agenciaEventosService;
-  public AuthController(ILogger<AuthController> logger, AgenciaEventosService agenciaEventosService)
+  private readonly AuthService _authService;
+  public AuthController(ILogger<AuthController> logger, AuthService authService)
   {
-   _logger = logger;
-    _agenciaEventosService = agenciaEventosService;
+    _logger = logger;
+    _authService = authService;
   }
 
   [HttpPost("cliente/login")]
