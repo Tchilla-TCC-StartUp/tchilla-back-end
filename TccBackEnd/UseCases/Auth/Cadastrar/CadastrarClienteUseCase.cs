@@ -6,11 +6,11 @@ namespace TccBackEnd.UseCases.Cliente.Cadastrar;
 
 public class CadastrarClienteUseCase
 {
-    private readonly IClienteRepository _clienteRepository;
+    private readonly IAuthRepository _authRepository;
 
-    public CadastrarClienteUseCase(IClienteRepository clienteRepository)
+    public CadastrarClienteUseCase(IAuthRepository authRepository)
     {
-        _clienteRepository = clienteRepository;
+        _authRepository = authRepository;
     }
 
     public async Task<Result<string>> Executar(CadastrarClienteDto dto)
@@ -23,6 +23,6 @@ public class CadastrarClienteUseCase
             Email = dto.Email
         };
         
-        return (Result<string>) await _clienteRepository.CadastrarCliente(cliente);
+        return (Result<string>) await _authRepository.CadastrarCliente(cliente);
     }
 }

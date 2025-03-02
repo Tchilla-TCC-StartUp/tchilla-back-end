@@ -13,32 +13,6 @@ public class ClienteRepository : IClienteRepository
     {
         _connectionString = connectionString;
     }
-    public async Task<Result<string>> CadastrarCliente(Cliente cliente)
-    {
-        try
-        {
-            using (var connection = new NpgsqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                var query = "INSERT INTO CLIENTE(NOME, NIF, TELEFONE) VALUES(@nome, @nif, @telefone)";
-                using (var command = new NpgsqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@nome", cliente.Nome);
-                    command.Parameters.AddWithValue("@nif", cliente.Nome);
-                    command.Parameters.AddWithValue("@telefone", cliente.Telefone);
-                    await command.ExecuteNonQueryAsync();
-                }
-            }
-
-            return Result<string>.Success($"Cadastrada AgenciaEventos com sucesso: {cliente.Nome}");
-        }
-        catch (Exception e)
-        {
-            return Result<string>.Error($"Erro ao Cadastrar AgenciaEventos: {e.Message}");
-        }
-
-        
-    }
 
     public async Task<Result<string>> AtualizarCliente(Cliente cliente)
     {

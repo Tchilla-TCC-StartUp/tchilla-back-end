@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "doijHL47Atk4t0PVXOLJyte9tymVHld0zLklgDf66RE3Xw80zZzMISpodWYSeMESIuvzKeCSn2G89kGBqx3Dyg==",
+  "dgSpecHash": "CX0+fSapoI+eRZHUT0CplWzon++pCu/PNkKBkwf029oG+jnAsAnxpUNaIBDN6hcQQIzByJVKnpi2KT67z570Ow==",
   "success": true,
   "projectFilePath": "/home/jesseingles/dev/School/TCC/TccBackEnd/TccBackEnd.csproj",
   "expectedPackageFiles": [
+    "/home/jesseingles/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/home/jesseingles/.nuget/packages/microsoft.extensions.apidescription.server/6.0.5/microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "/home/jesseingles/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.2/microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
     "/home/jesseingles/.nuget/packages/microsoft.extensions.logging.abstractions/8.0.2/microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
