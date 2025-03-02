@@ -6,7 +6,6 @@ namespace TccBackEnd.Domain.Interfaces;
 
 public interface IClienteRepository
 {
-    Task<Result<string>> CadastrarCliente(Cliente cliente);
     Task<Result<string>> AtualizarCliente(Cliente cliente);
     Task<Result<ClienteOutputDto?>> ObterClientePorId(long id);
     Task<Result<List<ClienteOutputDto>?>> ObterTodosClientes();

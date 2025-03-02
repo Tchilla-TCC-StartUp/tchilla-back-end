@@ -6,6 +6,7 @@ using TccBackEnd.UseCases.AgenciaEventos.Cadastrar;
 using TccBackEnd.UseCases.AgenciaEventos.Dtos;
 using TccBackEnd.UseCases.AgenciaEventos.ObterPorId;
 using TccBackEnd.UseCases.AgenciaEventos.ObterTodas;
+using TccBackEnd.UseCases.Cliente.Dtos;
 
 namespace TccBackEnd.Controllers;
 
@@ -21,10 +22,23 @@ public class AuthController : ControllerBase
     _authService = authService;
   }
 
-  [HttpPost("cliente/login")]
-  public async Task<IActionResult> LogarCliente()
+  [HttpPost("cadastrar")]
+  public async Task<IActionResult> CadastrarCliente([FromBody] CadastrarClienteDto dto)
   {
-    return Ok();
+    Result<string> result = await _authService.CadastrarCliente.Executar(dto);
+        _logger.LogInformation($"Solicitação de cadastramento de Agencia de eventos");
+        return (result.IsSuccess)
+            ? CreatedAtAction(nameof(CadastrarCliente), result, null)
+            : BadRequest(new { Error = result.ErrorMessage });    
+  }  
+  [HttpPost("cliente/login")]
+  public async Task<IActionResult> LogarCliente([FromBody] LogarClienteDto dto)
+  {
+    var result = await _authService.LogarCliente.Executar(dto);
+    _logger.LogInformation($"Solicitação de login de Cliente");
+    return (result.IsSuccess)
+      ? CreatedAtAction(nameof(LogarCliente), result, null)
+      : BadRequest(new {Error = result.ErrorMessage});
   }
 
     

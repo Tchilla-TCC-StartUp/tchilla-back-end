@@ -26,7 +26,7 @@ builder.Services.AddScoped<ObterTodasPorPesquisaAgenciaEventosUseCase>();
 
 builder.Services.AddScoped<IClienteRepository>(provider => new ClienteRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<ClienteService>();
-builder.Services.AddScoped<CadastrarClienteUseCase>();
+
 builder.Services.AddScoped<AtualizarClienteUseCase>();
 builder.Services.AddScoped<ObterPorIdClienteUseCase>();
 builder.Services.AddScoped<ObterTodosClienteUseCase>();
@@ -34,6 +34,9 @@ builder.Services.AddScoped<ObterTodosPorPesquisaClienteUseCase>();
 
 builder.Services.AddScoped<IPrestadorServicoRepository>(provider => new PrestadorServicoRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<CadastrarPrestadorServicoUseCase>();
+
+builder.Services.AddScoped<IAuthRepository>(provider => new AuthRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<CadastrarClienteUseCase>();
 // Add services to the container.
 
 builder.Services.AddControllers();
