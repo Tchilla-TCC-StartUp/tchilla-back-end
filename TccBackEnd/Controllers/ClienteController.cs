@@ -19,16 +19,7 @@ public class ClienteController : Controller
         _clienteService = clienteService;
     }
 
-    [HttpPost("cadastrar")]
-    public async Task<IActionResult> Cadastrar([FromBody] CadastrarClienteDto dto)
-    {
-        Result<string> result = await _clienteService.Cadastrar.Executar(dto);
-        _logger.LogInformation($"Solicitação de cadastramento de Agencia de eventos");
-        return (result.IsSuccess)
-            ? Created(nameof(Cadastrar), result)
-            : BadRequest(new { Error = result.ErrorMessage });
-    }
-    [HttpPut("atualizar")]
+    [HttpPut("atualizarPerfil")]
     public async Task<IActionResult> Atualizar([FromBody] AtualizarClienteDto dto)
     {
         Result<string> result = await _clienteService.Atualizar.Executar(dto);
