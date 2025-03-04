@@ -1,4 +1,4 @@
-namespace TccBackEnd.UseCases.AgenciaEventos.Dtos;
+namespace TccBackEnd.UseCases.Auth.Dtos;
 
 public class CadastrarAgenciaEventosDto
 {
@@ -6,5 +6,5 @@ public class CadastrarAgenciaEventosDto
     public string Nif { get; set; }
     public string Telefone { get; set; }
     public string Email { get; set; }
-    public string Localizacao  { get; set; }
+    public string Senha {get;set;}
 }

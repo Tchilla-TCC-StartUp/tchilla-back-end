@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using TccBackEnd.Service;
 using TccBackEnd.Shared.Result;
-using TccBackEnd.UseCases.AgenciaEventos.Atualizar;
-using TccBackEnd.UseCases.AgenciaEventos.Cadastrar;
 using TccBackEnd.UseCases.AgenciaEventos.Dtos;
-using TccBackEnd.UseCases.AgenciaEventos.ObterPorId;
-using TccBackEnd.UseCases.AgenciaEventos.ObterTodas;
+using TccBackEnd.UseCases.Auth.Dtos;
 
 namespace TccBackEnd.Controllers;
 
@@ -21,15 +18,8 @@ public class AgenciaController : ControllerBase
         _agenciaEventosService = agenciaEventosService;
     }
 
-    [HttpPost("cadastrar")]
-    public async Task<IActionResult> Cadastrar([FromBody] CadastrarAgenciaEventosDto dto)
-    {
-        Result<string> result = await _agenciaEventosService.Cadastrar.Executar(dto);
-        _logger.LogInformation($"Solicitação de cadastramento de Agencia de eventos");
-        return (result.IsSuccess) ? CreatedAtAction(nameof(Cadastrar), result, null) : BadRequest(new {Error = result.ErrorMessage});
-    }
-
-    [HttpPut("atualizar")]
+    
+    [HttpPut("atualizarPerfil")]
     public async Task<IActionResult> Atualizar([FromBody] AtualizarAgenciaEventosDto dto)
     {
         Result<string> result = await _agenciaEventosService.Atualizar.Executar(dto);

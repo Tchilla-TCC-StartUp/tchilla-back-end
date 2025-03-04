@@ -7,12 +7,12 @@ public class Cliente
     public string Nif { get; set; }
     public string Telefone { get; set; }
     public string Email { get; set; }
-    public string Avatar  { get; set; }
+    public string? Avatar  { get; set; }
+    public string Senha {get;set;}
     public DateTime DataNascimento { get; set; }
     public DateTime DataCadastro { get; set; }
     public DateTime DataAlteracao { get; set; }
     public DateTime DataExclusao { get; set; }
     public int GoogleId { get; set; }
-    public int FacebookId { get; set; }
-    public virtual ICollection<Endereco> enderecoCliente { get; set;} = new List<Endereco>();
+    public bool Logado {get;set;}
 }

@@ -20,7 +20,8 @@ public class CadastrarClienteUseCase
             Nome = dto.Nome,
             Nif = dto.Nif,
             Telefone = dto.Telefone,
-            Email = dto.Email
+            Email = dto.Email,
+            Senha = dto.Senha
         };
         
         return (Result<string>) await _authRepository.CadastrarCliente(cliente);

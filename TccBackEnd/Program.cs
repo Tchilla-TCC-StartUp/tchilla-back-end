@@ -2,7 +2,6 @@ using TccBackEnd.Domain.Interfaces;
 using TccBackEnd.Infra.Postgres.Repository;
 using TccBackEnd.Service;
 using TccBackEnd.UseCases.AgenciaEventos.Atualizar;
-using TccBackEnd.UseCases.AgenciaEventos.Cadastrar;
 using TccBackEnd.UseCases.AgenciaEventos.ObterPorId;
 using TccBackEnd.UseCases.AgenciaEventos.ObterTodas;
 using TccBackEnd.UseCases.AgenciaEventos.ObterTodasPorPesquisa;
@@ -18,7 +17,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Reposistories and Use Cases configuration
 builder.Services.AddScoped<IAgenciaEventosRepository>(provider => new AgenciaEventosRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<AgenciaEventosService>();
-builder.Services.AddScoped<CadastrarAgenciaEventosUseCase>();
 builder.Services.AddScoped<AtualizarAgenciaEventosUseCase>();
 builder.Services.AddScoped<ObterPorIdAgenciaEventosUseCase>();
 builder.Services.AddScoped<ObterTodasAgenciaEventosUseCase>();
@@ -36,7 +34,9 @@ builder.Services.AddScoped<IPrestadorServicoRepository>(provider => new Prestado
 builder.Services.AddScoped<CadastrarPrestadorServicoUseCase>();
 
 builder.Services.AddScoped<IAuthRepository>(provider => new AuthRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CadastrarClienteUseCase>();
+builder.Services.AddScoped<LogarClienteUseCase>();
 // Add services to the container.
 
 builder.Services.AddControllers();

@@ -25,7 +25,7 @@ public class ClienteController : Controller
         Result<string> result = await _clienteService.Cadastrar.Executar(dto);
         _logger.LogInformation($"Solicitação de cadastramento de Agencia de eventos");
         return (result.IsSuccess)
-            ? CreatedAtAction(nameof(Cadastrar), result, null)
+            ? Created(nameof(Cadastrar), result)
             : BadRequest(new { Error = result.ErrorMessage });
     }
     [HttpPut("atualizar")]
