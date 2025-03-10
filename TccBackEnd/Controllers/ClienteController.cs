@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TccBackEnd.Service;
 using TccBackEnd.Shared.Result;
-using TccBackEnd.UseCases.AgenciaEventos.Dtos;
-using TccBackEnd.UseCases.Cliente.Cadastrar;
 using TccBackEnd.UseCases.Cliente.Dtos;
 
 namespace TccBackEnd.Controllers;

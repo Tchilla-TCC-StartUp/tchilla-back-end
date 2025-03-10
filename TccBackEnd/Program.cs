@@ -5,14 +5,67 @@ using TccBackEnd.UseCases.AgenciaEventos.Atualizar;
 using TccBackEnd.UseCases.AgenciaEventos.ObterPorId;
 using TccBackEnd.UseCases.AgenciaEventos.ObterTodas;
 using TccBackEnd.UseCases.AgenciaEventos.ObterTodasPorPesquisa;
+using TccBackEnd.UseCases.Auth.LogOut;
 using TccBackEnd.UseCases.Cliente.Atualizar;
 using TccBackEnd.UseCases.Cliente.Cadastrar;
 using TccBackEnd.UseCases.Cliente.ObterPorId;
 using TccBackEnd.UseCases.Cliente.ObterTodos;
 using TccBackEnd.UseCases.Cliente.ObterTodosPorPesquisa;
 using TccBackEnd.UseCases.PrestadorServico.Cadastrar;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Autentication Configuration
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    }).AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "Tchilla",
+            ValidAudience = "Tchilla",
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Tchilla".PadRight(128)))
+        };
+    });
+// Adding Swagger Configuration
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options => {
+    options.SwaggerDoc("v1", new OpenApiInfo {Title = "TccBackend", Version = "v1"});
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "Insira o token JWT no campo abaixo: Bearer {seu_token}",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] { }
+        }
+    });
+});
 
 // Reposistories and Use Cases configuration
 builder.Services.AddScoped<IAgenciaEventosRepository>(provider => new AgenciaEventosRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -36,7 +89,9 @@ builder.Services.AddScoped<CadastrarPrestadorServicoUseCase>();
 builder.Services.AddScoped<IAuthRepository>(provider => new AuthRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CadastrarClienteUseCase>();
+builder.Services.AddScoped<CadastrarAgenciaUseCase>();
 builder.Services.AddScoped<LogarClienteUseCase>();
+builder.Services.AddScoped<LogOutClienteUseCase>();
 // Add services to the container.
 
 builder.Services.AddControllers();

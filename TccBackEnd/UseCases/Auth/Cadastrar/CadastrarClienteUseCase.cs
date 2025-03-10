@@ -18,7 +18,6 @@ public class CadastrarClienteUseCase
         var cliente = new Domain.Entities.Cliente()
         {
             Nome = dto.Nome,
-            Nif = dto.Nif,
             Telefone = dto.Telefone,
             Email = dto.Email,
             Senha = dto.Senha

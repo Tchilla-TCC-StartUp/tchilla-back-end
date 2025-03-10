@@ -1,4 +1,9 @@
 using System.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 using Npgsql;
 using TccBackEnd.Domain.Entities;
 using TccBackEnd.Domain.Interfaces;
@@ -17,7 +22,21 @@ public class AuthRepository : IAuthRepository
   }
   private string gerarTokenCliente(Cliente cliente)
   {
-    return "";
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Tchilla".PadRight(128)));
+    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+    var token = new JwtSecurityToken(
+      issuer: "Tchilla",
+      audience: "Tchilla",
+      claims: new List<Claim>{
+        new Claim("id", cliente.Id.ToString()),
+        new Claim("nome", cliente.Nome)
+      },
+      expires: DateTime.Now.AddMonths(6),
+      signingCredentials: creds
+    );
+
+    return new JwtSecurityTokenHandler().WriteToken(token);
   }
   public async Task<Result<string>> CadastrarCliente(Cliente cliente)
   {
@@ -26,11 +45,10 @@ public class AuthRepository : IAuthRepository
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "INSERT INTO CLIENTE(NOME, NIF, TELEFONE, EMAIL, SENHA) VALUES(@nome, @nif, @telefone, @email, @senha)";
+        var query = "INSERT INTO CLIENTE(NOME, TELEFONE, EMAIL, SENHA) VALUES(@nome, @nif, @telefone, @email, @senha)";
         using (var command = new NpgsqlCommand(query, connection))
         {
           command.Parameters.AddWithValue("@nome", cliente.Nome);
-          command.Parameters.AddWithValue("@nif", cliente.Nome);
           command.Parameters.AddWithValue("@telefone", cliente.Telefone);
           command.Parameters.AddWithValue("@email", cliente.Email);
           command.Parameters.AddWithValue("@senha", Bcrypt.HashPassword(cliente.Senha));
@@ -60,7 +78,7 @@ public class AuthRepository : IAuthRepository
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "SELECT ID, NOME, NIF, EMAIl, TELFONE, PASSWORD FROM CLIENTE WHERE EMAIL = @email or NOME = @nome";
+        var query = "SELECT ID, NOME, EMAIL, TELEFONE, SENHA FROM CLIENTE WHERE EMAIL = @email OR NOME = @nome";
         using (var command = new NpgsqlCommand(query, connection))
         {
           command.Parameters.AddWithValue("@email", dto.EmailOrUsername);
@@ -70,36 +88,42 @@ public class AuthRepository : IAuthRepository
           {
             if (await reader.ReadAsync())
             {
-              if(Bcrypt.Verify(dto.Password, reader.GetString(4)))
+              if (Bcrypt.Verify(dto.Password, reader.GetString(5)))
               {
-                query = "INSERT INTO CLIENTE(LOGADO) VALUES(TRUE) WHERE ID=@id";
-
-                command.Parameters.AddWithValue("@id", reader.GetInt64(0));
-                await command.ExecuteNonQueryAsync();
+                long clienteId = reader.GetInt64(0);
                 Cliente cliente = new Cliente()
                 {
-                  Nome = reader.GetString(0),
-                  Email = reader.GetString(1),
-                  Nif = reader.GetString(2),
+                  Id = clienteId,
+                  Nome = reader.GetString(1),
+                  Email = reader.GetString(2),
                   Telefone = reader.GetString(3),
                   Senha = reader.GetString(4)
                 };
-                
+
+                reader.Close();
+
+                var updateQuery = "UPDATE CLIENTE SET LOGADO=TRUE WHERE ID=@id";
+                using (var updateCommand = new NpgsqlCommand(updateQuery, connection))
+                {
+                  updateCommand.Parameters.AddWithValue("@id", clienteId);
+                  await updateCommand.ExecuteNonQueryAsync();
+                }
+
                 return Result<string>.Success(gerarTokenCliente(cliente), "Logado Cliente com sucesso");
               }
             }
           }
-      
         }
       }
 
-      return Result<string>.Success($"Logado Cliente com sucesso: {dto.EmailOrUsername}");
+      return Result<string>.Error("Credenciais inválidas.");
     }
     catch (Exception e)
     {
       return Result<string>.Error($"Erro ao Logar Cliente: {e.Message}");
     }
   }
+
 
   public async Task<Result<string>> LogOutCliente(long id)
   {
@@ -119,15 +143,15 @@ public class AuthRepository : IAuthRepository
             {
               query = "INSERT INTO CLIENTE(LOGADO) VALUES(FALSE) WHERE ID=@id";
 
-                command.Parameters.AddWithValue("@id", id);
-                await command.ExecuteNonQueryAsync();
-              
-                return Result<string>.Success("LogOut Cliente com sucesso");
-              }
+              command.Parameters.AddWithValue("@id", id);
+              await command.ExecuteNonQueryAsync();
+
+              return Result<string>.Success("LogOut Cliente com sucesso");
             }
           }
-      
         }
+
+      }
       return Result<string>.Success($"LogOut Cliente com sucesso");
     }
     catch (Exception e)
@@ -141,13 +165,13 @@ public class AuthRepository : IAuthRepository
     throw new NotImplementedException();
   }
 
-    public Task<Result<string>> LogarAgencia(LogarCredenciaisDto dto)
-    {
-        throw new NotImplementedException();
-    }
+  public Task<Result<string>> LogarAgencia(LogarCredenciaisDto dto)
+  {
+    throw new NotImplementedException();
+  }
 
-    public Task<Result<string>> CadastrarAgencia(Agencia agencia)
-    {
-        throw new NotImplementedException();
-    }
+  public Task<Result<string>> CadastrarAgencia(Agencia agencia)
+  {
+    throw new NotImplementedException();
+  }
 }
