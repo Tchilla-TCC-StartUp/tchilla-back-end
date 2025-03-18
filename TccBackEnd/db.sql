@@ -218,6 +218,21 @@ CREATE TABLE categoria_produto (
     nome VARCHAR(255) NOT NULL UNIQUE,
     descricao TEXT
 );
+CREATE TABLE Otp_Usuario (
+    id serial primary key,
+    int otp not null,
+    data_criacao TIMESTAMP not null,
+    int usuarioId,
+    foreign key(usuario_id) REFERENCES usuario(id)
+);
 ALTER TABLE local ADD COLUMN categoria_id INT REFERENCES categoria_local(id) ON DELETE SET NULL;
 ALTER TABLE servico ADD COLUMN categoria_id INT REFERENCES categoria_servico(id) ON DELETE SET NULL;
 ALTER TABLE produto ADD COLUMN categoria_id INT REFERENCES categoria_produto(id) ON DELETE SET NULL;
+
+// To List Enums in the db
+SELECT n.nspname AS schema, 
+       t.typname AS enum_name
+FROM pg_type t 
+JOIN pg_enum e ON t.oid = e.enumtypid 
+JOIN pg_namespace n ON n.oid = t.typnamespace
+GROUP BY schema, enum_name;

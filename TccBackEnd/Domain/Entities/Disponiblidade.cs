@@ -1,3 +1,5 @@
+using TccBackEnd.Domain.Enums;
+
 namespace TccBackEnd.Domain.Entities;
 public class Disponibilidade
 {

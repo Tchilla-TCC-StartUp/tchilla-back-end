@@ -2,37 +2,38 @@ using Npgsql;
 using TccBackEnd.Domain.Entities;
 using TccBackEnd.Domain.Interfaces;
 using TccBackEnd.Shared.Result;
-using TccBackEnd.UseCases.Cliente.Dtos;
+using TccBackEnd.UseCases.Usuario.Dtos;
+using Bcrypt = BCrypt.Net.BCrypt;
 
 namespace TccBackEnd.Infra.Postgres.Repository;
 
-public class ClienteRepository : IClienteRepository
+public class UsuarioRepository : IUsuarioRepository
 {
     private readonly string _connectionString;
-    public ClienteRepository(string connectionString)
+    public UsuarioRepository(string connectionString)
     {
         _connectionString = connectionString;
     }
 
-    public async Task<Result<string>> AtualizarCliente(Cliente cliente)
+    public async Task<Result<string>> Atualizar(Usuario usuario)
     {
         try
         {
             using (var connection = new NpgsqlConnection( _connectionString))
             {
                 await connection.OpenAsync();
-                var query = "UPDATE CLIENTE SET nome = @nome, telefone = @telefone WHERE id = @id";
+                var query = "UPDATE usuario SET nome = @nome, email = @email, telefone = @telefone WHERE id = @id";
                 using (var command = new NpgsqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@nome", cliente.Nome);
-                    command.Parameters.AddWithValue("@telefone", cliente.Telefone);
-                    command.Parameters.AddWithValue("@id", cliente.Id);
+                    command.Parameters.AddWithValue("@nome", usuario.Nome);
+                    command.Parameters.AddWithValue("@telefone", usuario.Telefone);
+                    command.Parameters.AddWithValue("@id", usuario.Id);
                     
                     await command.ExecuteNonQueryAsync();
                 }
             }
 
-            return Result<string>.Success("Cliente Atualizado com sucesso");
+            return Result<string>.Success("Usuario Atualizado com sucesso");
         }
         catch (Exception e)
         {
@@ -40,9 +41,36 @@ public class ClienteRepository : IClienteRepository
         }
     }
 
-    public async Task<Result<ClienteOutputDto>> ObterClientePorId(long id)
+
+    public async Task<Result<string>> Cadastrar(Usuario usuario)
     {
-        ClienteOutputDto? clienteOutputDto = new ClienteOutputDto();
+        try
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var query = "INSERT INTO usuario(nome, email, tipo, senhaHash) VALUES(@nome, @email, @tipo, @senha)";
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@nome", usuario.Nome);
+                    command.Parameters.AddWithValue("@email", usuario.Email);
+                    command.Parameters.AddWithValue("@tipo", usuario.Tipo);
+                    command.Parameters.AddWithValue("@senha", Bcrypt.HashPassword(usuario.SenhaHash));
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+
+            return Result<string>.Success($"Cadastrado Usuario com sucesso: {usuario.Nome}");
+        }
+        catch (Exception e)
+        {
+            return Result<string>.Error($"Erro ao Cadastrar Usuario: {e.Message}");
+        }
+    }
+
+    public async Task<Result<UsuarioOutputDto>> ObterClientePorId(long id)
+    {
+        UsuarioOutputDto? clienteOutputDto = new UsuarioOutputDto();
         try
         {
             using (var connection = new NpgsqlConnection(_connectionString))
@@ -56,7 +84,7 @@ public class ClienteRepository : IClienteRepository
                     {
                         if (await reader.ReadAsync())
                         {
-                            clienteOutputDto = new ClienteOutputDto()
+                            clienteOutputDto = new UsuarioOutputDto()
                             {
                                 Id = reader.GetInt64(0),
                                 Nome = reader.GetString(1),
@@ -67,18 +95,28 @@ public class ClienteRepository : IClienteRepository
                 }
             }
 
-            return Result<ClienteOutputDto>.Success(clienteOutputDto, "Obtido Cliente com sucesso");
+            return Result<UsuarioOutputDto>.Success(clienteOutputDto, "Obtido Cliente com sucesso");
         }
         catch (Exception e)
         {
-            return Result<ClienteOutputDto>.Error($"Erro ao obter Cliente: {e.Message}");
+            return Result<UsuarioOutputDto>.Error($"Erro ao obter Cliente: {e.Message}");
         }
         
     }
 
-    public async Task<Result<List<ClienteOutputDto>?>> ObterTodosClientes()
+    public Task<Result<UsuarioOutputDto?>> ObterPorId(long id)
     {
-        List<ClienteOutputDto>? clientesOutputDtos = new List<ClienteOutputDto>();
+        throw new NotImplementedException();
+    }
+
+    public Task<Result<List<UsuarioOutputDto>?>> ObterTodos()
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<List<UsuarioOutputDto>?>> ObterTodosClientes()
+    {
+        List<UsuarioOutputDto>? clientesOutputDtos = new List<UsuarioOutputDto>();
         try
         {
             using (var connection = new NpgsqlConnection(_connectionString))
@@ -91,9 +129,9 @@ public class ClienteRepository : IClienteRepository
                     {
                         while(await reader.ReadAsync())
                         {
-                            clientesOutputDtos = new List<ClienteOutputDto>()
+                            clientesOutputDtos = new List<UsuarioOutputDto>()
                             {
-                                new ClienteOutputDto()
+                                new UsuarioOutputDto()
                                 {
                                     Id = reader.GetInt64(0),
                                     Nif = reader.GetString(1),
@@ -108,17 +146,17 @@ public class ClienteRepository : IClienteRepository
                 }
             }
             
-            return Result<List<ClienteOutputDto>>.Success(clientesOutputDtos, "Obtidas todas Agencia de Eventos com sucesso");
+            return Result<List<UsuarioOutputDto>>.Success(clientesOutputDtos, "Obtidas todas Agencia de Eventos com sucesso");
         }
         catch (Exception e)
         {
-            return Result<List<ClienteOutputDto>>.Error($"Erro ao obter Agencias de Eventos: {e.Message}");
+            return Result<List<UsuarioOutputDto>>.Error($"Erro ao obter Agencias de Eventos: {e.Message}");
         }
     }
 
-    public async Task<Result<List<ClienteOutputDto>?>> ObterTodosClientesPorPesquisa(string consulta)
+    public async Task<Result<List<UsuarioOutputDto>?>> ObterTodosClientesPorPesquisa(string consulta)
     {
-        List<ClienteOutputDto>? clientesOutputDtos = new List<ClienteOutputDto>();
+        List<UsuarioOutputDto>? clientesOutputDtos = new List<UsuarioOutputDto>();
         try
         {
             using (var connection = new NpgsqlConnection(_connectionString))
@@ -131,9 +169,9 @@ public class ClienteRepository : IClienteRepository
                     {
                         while(await reader.ReadAsync())
                         {
-                            clientesOutputDtos = new List<ClienteOutputDto>()
+                            clientesOutputDtos = new List<UsuarioOutputDto>()
                             {
-                                new ClienteOutputDto()
+                                new UsuarioOutputDto()
                                 {
                                     Id = reader.GetInt64(0),
                                     Nif = reader.GetString(1),
@@ -148,11 +186,21 @@ public class ClienteRepository : IClienteRepository
                 }
             }
             
-            return Result<List<ClienteOutputDto>>.Success(clientesOutputDtos, "Obtidas todas Agencia de Eventos com sucesso");
+            return Result<List<UsuarioOutputDto>>.Success(clientesOutputDtos, "Obtidas todas Agencia de Eventos com sucesso");
         }
         catch (Exception e)
         {
-            return Result<List<ClienteOutputDto>>.Error($"Erro ao obter Agencias de Eventos: {e.Message}");
+            return Result<List<UsuarioOutputDto>>.Error($"Erro ao obter Agencias de Eventos: {e.Message}");
         }
+    }
+
+    public Task<Result<List<UsuarioOutputDto>?>> ObterTodosPorPesquisa(string consulta)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Result<string>> DeletarUsuario(int idUsuario)
+    {
+        throw new NotImplementedException();
     }
 }

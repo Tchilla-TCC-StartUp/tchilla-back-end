@@ -1,4 +1,4 @@
-namespace TccBackEnd.UseCases.Cliente.Dtos;
+namespace TccBackEnd.UseCases.Auth.Dtos;
 
 public class LogarCredenciaisDto
 {

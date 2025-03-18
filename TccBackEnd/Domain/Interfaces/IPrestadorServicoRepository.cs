@@ -2,8 +2,8 @@ using TccBackEnd.Domain.Entities;
 
 namespace TccBackEnd.Domain.Interfaces;
 
-public interface IPrestadorServicoRepository
+public interface IPrestadorRepository
 {
     Task<int> CadastrarPrestadorServico(Prestador prestadorServico);
-    Task<PrestadorServico?> ObterPrestadorServicoPorId(long id);
+    Task<Prestador?> ObterPrestadorServicoPorId(long id);
 }

@@ -1,6 +1,6 @@
-namespace TccBackEnd.UseCases.Cliente.Dtos;
+namespace TccBackEnd.UseCases.Usuario.Dtos;
 
-public class ClienteOutputDto
+public class UsuarioOutputDto
 {
     public long Id { get; set; }
     public string Nome { get; set; }

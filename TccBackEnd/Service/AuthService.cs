@@ -1,24 +1,22 @@
+using TccBackEnd.UseCases.Auth.Logar;
 using TccBackEnd.UseCases.Auth.LogOut;
-using TccBackEnd.UseCases.Cliente.Cadastrar;
+using TccBackEnd.UseCases.Usuario.Cadastrar;
 
 namespace TccBackEnd.Service;
 
 public class AuthService
 {
-  public CadastrarClienteUseCase CadastrarCliente { get; }
-  public CadastrarAgenciaUseCase CadastrarAgencia {get;}
-  public LogarClienteUseCase LogarCliente {get;}
-  public LogOutClienteUseCase LogOutCliente {get;}
+  public CadastrarUsuarioUseCase Cadastrar {get;}
+  public LogarUseCase Logar {get;}
+  public LogOutUseCase LogOut {get;}
   public AuthService(
-    CadastrarClienteUseCase cadastrarCliente,
-    LogarClienteUseCase logarCliente,
-    LogOutClienteUseCase logOutCliente,
-    CadastrarAgenciaUseCase cadastrarAgencia
+    CadastrarUsuarioUseCase cadastrar,
+    LogarUseCase logar,
+    LogOutUseCase logOut
   )
   {
-    CadastrarCliente = cadastrarCliente;
-    LogarCliente = logarCliente;
-    LogOutCliente = logOutCliente;
-    cadastrarAgencia = CadastrarAgencia;
+    Cadastrar = cadastrar;
+    Logar = logar;
+    LogOut = logOut;
   }
 }

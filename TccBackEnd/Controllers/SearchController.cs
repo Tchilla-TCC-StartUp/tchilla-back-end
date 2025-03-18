@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using TccBackEnd.Service;
-using TccBackEnd.UseCases.PrestadorServico.Cadastrar;
 using TccBackEnd.UseCases.PrestadorServico.Dtos;
 
 namespace TccBackEnd.Controllers;

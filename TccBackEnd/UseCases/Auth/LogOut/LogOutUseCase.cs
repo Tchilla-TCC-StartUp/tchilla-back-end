@@ -3,15 +3,15 @@ using TccBackEnd.Shared.Result;
 
 namespace TccBackEnd.UseCases.Auth.LogOut;
 
-public class LogOutClienteUseCase
+public class LogOutUseCase
 {
   private readonly IAuthRepository _authRepository;
-  public LogOutClienteUseCase(IAuthRepository authRepository)
+  public LogOutUseCase(IAuthRepository authRepository)
   {
     _authRepository = authRepository;
   }
   public async Task<Result<string>> Executar(long id)
   {
-    return (Result<string>) await _authRepository.LogOutCliente(id);
+    return (Result<string>) await _authRepository.LogOut(id);
   }
 }

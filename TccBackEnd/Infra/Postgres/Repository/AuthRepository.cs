@@ -8,7 +8,8 @@ using Npgsql;
 using TccBackEnd.Domain.Entities;
 using TccBackEnd.Domain.Interfaces;
 using TccBackEnd.Shared.Result;
-using TccBackEnd.UseCases.Cliente.Dtos;
+using TccBackEnd.UseCases.Auth.Dtos;
+using TccBackEnd.UseCases.Usuario.Dtos;
 using Bcrypt = BCrypt.Net.BCrypt;
 
 namespace TccBackEnd.Infra.Postgres.Repository;
@@ -20,7 +21,7 @@ public class AuthRepository : IAuthRepository
   {
     _connectionString = connectionString;
   }
-  private string gerarTokenCliente(Cliente cliente)
+  private string gerarTokenUsuario(Usuario usuario)
   {
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Tchilla".PadRight(128)));
     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -29,8 +30,8 @@ public class AuthRepository : IAuthRepository
       issuer: "Tchilla",
       audience: "Tchilla",
       claims: new List<Claim>{
-        new Claim("id", cliente.Id.ToString()),
-        new Claim("nome", cliente.Nome)
+        new Claim("id", usuario.Id.ToString()),
+        new Claim("nome", usuario.Nome)
       },
       expires: DateTime.Now.AddMonths(6),
       signingCredentials: creds
@@ -38,78 +39,73 @@ public class AuthRepository : IAuthRepository
 
     return new JwtSecurityTokenHandler().WriteToken(token);
   }
-  public async Task<Result<string>> CadastrarCliente(Cliente cliente)
+  public async Task<Result<string>> CadastrarUsuario(Usuario usuario)
   {
     try
     {
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "INSERT INTO CLIENTE(NOME, TELEFONE, EMAIL, SENHA) VALUES(@nome, @nif, @telefone, @email, @senha)";
+        var query = "INSERT INTO usuario(NOME, TELEFONE, EMAIL, SENHA) VALUES(@nome, @nif, @telefone, @email, @senha)";
         using (var command = new NpgsqlCommand(query, connection))
         {
-          command.Parameters.AddWithValue("@nome", cliente.Nome);
-          command.Parameters.AddWithValue("@telefone", cliente.Telefone);
-          command.Parameters.AddWithValue("@email", cliente.Email);
-          command.Parameters.AddWithValue("@senha", Bcrypt.HashPassword(cliente.Senha));
+          command.Parameters.AddWithValue("@nome", usuario.Nome);
+          command.Parameters.AddWithValue("@telefone", usuario.Telefone);
+          command.Parameters.AddWithValue("@email", usuario.Email);
+          command.Parameters.AddWithValue("@senha", Bcrypt.HashPassword(usuario.SenhaHash));
           await command.ExecuteNonQueryAsync();
         }
       }
 
-      return Result<string>.Success($"Cadastrada Cliente com sucesso: {cliente.Nome}");
+      return Result<string>.Success($"Cadastrada usuario com sucesso: {usuario.Nome}");
     }
     catch (Exception e)
     {
-      return Result<string>.Error($"Erro ao Cadastrar Cliente: {e.Message}");
+      return Result<string>.Error($"Erro ao Cadastrar usuario: {e.Message}");
     }
 
 
   }
 
-  public Task<Result<string>> ForgotPassword()
-  {
-    throw new NotImplementedException();
-  }
 
-  public async Task<Result<string>> LogarCliente(LogarCredenciaisDto dto)
+  public async Task<Result<string>> Logar(LogarCredenciaisDto dto)
   {
     try
     {
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "SELECT ID, NOME, EMAIL, TELEFONE, SENHA FROM CLIENTE WHERE EMAIL = @email OR NOME = @nome";
+        var query = "SELECT ID, NOME, EMAIL, TELEFONE, SENHA, TIPO FROM usuario WHERE EMAIL = @email OR NOME = @nome";
         using (var command = new NpgsqlCommand(query, connection))
         {
           command.Parameters.AddWithValue("@email", dto.EmailOrUsername);
           command.Parameters.AddWithValue("@nome", dto.EmailOrUsername);
-
           using (var reader = await command.ExecuteReaderAsync())
           {
             if (await reader.ReadAsync())
             {
               if (Bcrypt.Verify(dto.Password, reader.GetString(5)))
               {
-                long clienteId = reader.GetInt64(0);
-                Cliente cliente = new Cliente()
+                Usuario usuario = new Usuario()
                 {
-                  Id = clienteId,
+                  Id = reader.GetInt32(0),
                   Nome = reader.GetString(1),
                   Email = reader.GetString(2),
                   Telefone = reader.GetString(3),
-                  Senha = reader.GetString(4)
+                  SenhaHash = reader.GetString(4),
+                  // Tipo = reader.Get(5)
                 };
 
                 reader.Close();
 
-                var updateQuery = "UPDATE CLIENTE SET LOGADO=TRUE WHERE ID=@id";
+                var updateQuery = "UPDATE usuario SET LOGADO=TRUE WHERE ID=@id";
                 using (var updateCommand = new NpgsqlCommand(updateQuery, connection))
                 {
-                  updateCommand.Parameters.AddWithValue("@id", clienteId);
+                  updateCommand.Parameters.AddWithValue("@id", usuario.Id);
                   await updateCommand.ExecuteNonQueryAsync();
                 }
 
-                return Result<string>.Success(gerarTokenCliente(cliente), "Logado Cliente com sucesso");
+                return Result<string>.Success(gerarTokenUsuario(usuario), "Logado usuario com sucesso");
               }
             }
           }
@@ -120,19 +116,19 @@ public class AuthRepository : IAuthRepository
     }
     catch (Exception e)
     {
-      return Result<string>.Error($"Erro ao Logar Cliente: {e.Message}");
+      return Result<string>.Error($"Erro ao Logar usuario: {e.Message}");
     }
   }
 
 
-  public async Task<Result<string>> LogOutCliente(long id)
+  public async Task<Result<string>> LogOut(long id)
   {
     try
     {
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "SELECT NOME FROM CLIENTE WHERE ID = @id";
+        var query = "SELECT NOME FROM usuario WHERE ID = @id";
         using (var command = new NpgsqlCommand(query, connection))
         {
           command.Parameters.AddWithValue("@id", id);
@@ -141,36 +137,31 @@ public class AuthRepository : IAuthRepository
           {
             if (await reader.ReadAsync() && reader.HasRows)
             {
-              query = "INSERT INTO CLIENTE(LOGADO) VALUES(FALSE) WHERE ID=@id";
+              query = "INSERT INTO usuario(LOGADO) VALUES(FALSE) WHERE ID=@id";
 
               command.Parameters.AddWithValue("@id", id);
               await command.ExecuteNonQueryAsync();
 
-              return Result<string>.Success("LogOut Cliente com sucesso");
+              return Result<string>.Success("LogOut usuario com sucesso");
             }
           }
         }
 
       }
-      return Result<string>.Success($"LogOut Cliente com sucesso");
+      return Result<string>.Success($"LogOut usuario com sucesso");
     }
     catch (Exception e)
     {
-      return Result<string>.Error($"Erro ao Logar Cliente: {e.Message}");
+      return Result<string>.Error($"Erro ao Logar usuario: {e.Message}");
     }
   }
 
-  public Task<Result<string>> VerificarEmail()
+  public Task<Result<string>> ForgotPassword(string email)
   {
     throw new NotImplementedException();
   }
 
-  public Task<Result<string>> LogarAgencia(LogarCredenciaisDto dto)
-  {
-    throw new NotImplementedException();
-  }
-
-  public Task<Result<string>> CadastrarAgencia(Agencia agencia)
+  public Task<Result<string>> VerificarEmail(string token)
   {
     throw new NotImplementedException();
   }
