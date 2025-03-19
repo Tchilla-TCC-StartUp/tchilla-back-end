@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
+using NpgsqlTypes;
 using TccBackEnd.Domain.Entities;
 using TccBackEnd.Domain.Interfaces;
 using TccBackEnd.Shared.Result;
@@ -46,13 +47,14 @@ public class AuthRepository : IAuthRepository
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "INSERT INTO usuario(NOME, TELEFONE, EMAIL, SENHA) VALUES(@nome, @nif, @telefone, @email, @senha)";
+        var query = "INSERT INTO usuario(NOME, TELEFONE, EMAIL, SENHA_HASH, TIPO) VALUES(@nome, @nif, @telefone, @email, @senha, @tipo)";
         using (var command = new NpgsqlCommand(query, connection))
         {
           command.Parameters.AddWithValue("@nome", usuario.Nome);
           command.Parameters.AddWithValue("@telefone", usuario.Telefone);
           command.Parameters.AddWithValue("@email", usuario.Email);
           command.Parameters.AddWithValue("@senha", Bcrypt.HashPassword(usuario.SenhaHash));
+          command.Parameters.AddWithValue("@tipo", usuario.Tipo.ToString());
           await command.ExecuteNonQueryAsync();
         }
       }
@@ -75,7 +77,7 @@ public class AuthRepository : IAuthRepository
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "SELECT ID, NOME, EMAIL, TELEFONE, SENHA, TIPO FROM usuario WHERE EMAIL = @email OR NOME = @nome";
+        var query = "SELECT ID, NOME, EMAIL, TELEFONE, SENHA_HASH, TIPO FROM usuario WHERE EMAIL = @email OR NOME = @nome";
         using (var command = new NpgsqlCommand(query, connection))
         {
           command.Parameters.AddWithValue("@email", dto.EmailOrUsername);
@@ -84,7 +86,7 @@ public class AuthRepository : IAuthRepository
           {
             if (await reader.ReadAsync())
             {
-              if (Bcrypt.Verify(dto.Password, reader.GetString(5)))
+              if (Bcrypt.Verify(dto.Password, reader.GetString(4)))
               {
                 Usuario usuario = new Usuario()
                 {

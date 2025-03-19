@@ -15,6 +15,8 @@ using TccBackEnd.UseCases.Usuario.Atualizar;
 using TccBackEnd.UseCases.Usuario.ObterTodosPorPesquisa;
 using TccBackEnd.UseCases.Usuario.ObterTodos;
 using TccBackEnd.UseCases.Usuario.ObterPorId;
+using Npgsql;
+using TccBackEnd.Domain.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -84,6 +86,7 @@ builder.Services.AddScoped<ObterTodosPorPesquisaUsuarioUseCase>();
 
 // builder.Services.AddScoped<IPrestadorServicoRepository>(provider => new PrestadorServicoRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 // builder.Services.AddScoped<CadastrarPrestadorServicoUseCase>();
+NpgsqlConnection.GlobalTypeMapper.MapEnum<UsuarioTipo>("usuario_tipo");
 
 builder.Services.AddScoped<IAuthRepository>(provider => new AuthRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<AuthService>();
@@ -91,6 +94,9 @@ builder.Services.AddScoped<CadastrarUsuarioUseCase>();
 builder.Services.AddScoped<CadastrarUsuarioUseCase>();
 builder.Services.AddScoped<LogarUseCase>();
 builder.Services.AddScoped<LogOutUseCase>();
+
+builder.Services.AddScoped<ISearchRepository>(provider => new SearchRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<SearchService>();
 // Add services to the container.
 
 builder.Services.AddControllers();

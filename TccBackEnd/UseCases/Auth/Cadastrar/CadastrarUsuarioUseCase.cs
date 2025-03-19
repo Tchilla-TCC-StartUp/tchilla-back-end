@@ -16,14 +16,12 @@ public class CadastrarUsuarioUseCase
 
     public async Task<Result<string>> Executar(CadastrarUsuarioDto dto)
     {
-        string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
-        string telefonePattern = @"^\d{9,15}$";
 
         var usuario = new Domain.Entities.Usuario()
         {
             Nome = dto.Nome,
-            Telefone = (Regex.IsMatch(dto.EmailOrTelefone, telefonePattern)) ? dto.EmailOrTelefone : "",
-            Email = (Regex.IsMatch(dto.EmailOrTelefone, emailPattern)) ? dto.EmailOrTelefone : "",
+            Telefone = dto.Telefone,
+            Email = dto.Email,
             Tipo = dto.Tipo,
             SenhaHash = dto.Senha
         };

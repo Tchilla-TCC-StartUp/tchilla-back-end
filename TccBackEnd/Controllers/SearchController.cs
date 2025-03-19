@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TccBackEnd.Service;
 using TccBackEnd.UseCases.PrestadorServico.Dtos;
+using TccBackEnd.UseCases.Search.Dtos;
 
 namespace TccBackEnd.Controllers;
 
@@ -17,7 +18,7 @@ public class SearchController : Controller
     }
 
     [HttpGet("locais")]
-    public async Task<IActionResult> PesquisarLocais()
+    public async Task<IActionResult> PesquisarLocal(SearchLocalInputDto dto)
     {
         return Ok();
     }

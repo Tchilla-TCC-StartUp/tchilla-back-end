@@ -38,6 +38,7 @@ CREATE TABLE usuario (
     telefone VARCHAR(20),
     tipo usuario_tipo NOT NULL,
     foto TEXT,
+    logado BOOLEAN default false,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
