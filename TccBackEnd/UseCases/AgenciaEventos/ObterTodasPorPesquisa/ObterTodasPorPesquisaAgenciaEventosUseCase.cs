@@ -1,6 +1,7 @@
 using TccBackEnd.Domain.Interfaces;
 using TccBackEnd.Shared.Result;
 using TccBackEnd.UseCases.AgenciaEventos.Dtos;
+using TccBackEnd.UseCases.Auth.Dtos;
 
 namespace TccBackEnd.UseCases.AgenciaEventos.ObterTodasPorPesquisa;
 
