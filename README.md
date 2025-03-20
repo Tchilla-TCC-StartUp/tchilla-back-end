@@ -23,5 +23,8 @@ Ser a principal referência no planejamento de eventos, revolucionando o setor c
 
 A **Tchilla** propõe uma abordagem digital para otimizar e modernizar o mercado de eventos, trazendo praticidade e acessibilidade para organizadores e fornecedores. 🚀  
 
----
+🎥 **Vídeo Explicativo:** [Clique aqui para assistir](https://drive.google.com/file/d/140q5siQy5_gYr62tdDrTWTYzN1day75V/view?usp=sharing)  
+
+📱 **Baixe o App (APK):** [Adicione o link aqui]  
+
 📍 _Feito com 💜 pela equipe da Tchilla_
