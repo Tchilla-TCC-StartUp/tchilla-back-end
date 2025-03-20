@@ -25,6 +25,10 @@ A **Tchilla** propõe uma abordagem digital para otimizar e modernizar o mercado
 
 🎥 **Vídeo Explicativo:** [Clique aqui para assistir](https://drive.google.com/file/d/140q5siQy5_gYr62tdDrTWTYzN1day75V/view?usp=sharing)  
 
+📄 **MVP:** [Clique aqui para acessar](https://docs.google.com/document/d/19M83rsbTNP2QLDKz9e5bLJpeTGJ04iQeu9vXeAdtJtY/edit?tab=t.0)  
+
 📱 **Baixe o App (APK):** [Adicione o link aqui]  
+
+---
 
 📍 _Feito com 💜 pela equipe da Tchilla_
