@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "dLCn6iSf/sqD80QHJeQTu4a4lKObBu7XX4Q3xszcW4k=",
+  "Hash": "l3XGSLoEihil3wgR+FBNhb/v/kxDyGYeNMWL/VZOxsA=",
   "Source": "TccBackEnd",
   "BasePath": "_content/TccBackEnd",
   "Mode": "Default",
@@ -34,6 +34,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/Resources/images/House searching-cuate.svg"
+    },
+    {
+      "Identity": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/Resources/images/user.svg",
+      "SourceId": "TccBackEnd",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/",
+      "BasePath": "_content/TccBackEnd",
+      "RelativePath": "Resources/images/user.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/Resources/images/user.svg"
     },
     {
       "Identity": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/Resources/images/Wedding planner-cuate.svg",

@@ -37,7 +37,7 @@ public class UsuarioRepository : IUsuarioRepository
         }
         catch (Exception e)
         {
-            return Result<string>.Error($"Erro ao atualizar Cliente: {e.Message}");
+            return Result<string>.Error($"Erro ao atualizar usuario: {e.Message}");
         }
     }
 
@@ -69,15 +69,15 @@ public class UsuarioRepository : IUsuarioRepository
         }
     }
 
-    public async Task<Result<UsuarioOutputDto>> ObterClientePorId(long id)
+    public async Task<Result<UsuarioOutputDto?>> ObterPorId(int id)
     {
-        UsuarioOutputDto? clienteOutputDto = new UsuarioOutputDto();
+        UsuarioOutputDto? usuarioOutputDto = new UsuarioOutputDto();
         try
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var query = "SELECT * FROM CLIENTE WHERE id = @id";
+                var query = "SELECT id, nome, email, telefone, foto FROM usuario WHERE id = @id";
                 using (var command = new NpgsqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@id", id);
@@ -85,61 +85,54 @@ public class UsuarioRepository : IUsuarioRepository
                     {
                         if (await reader.ReadAsync())
                         {
-                            clienteOutputDto = new UsuarioOutputDto()
+                            usuarioOutputDto = new UsuarioOutputDto()
                             {
                                 Id = reader.GetInt64(0),
                                 Nome = reader.GetString(1),
-                                Nif = reader.GetString(2),
+                                Email = reader.GetString(2),
+                                Telefone = reader.GetString(3),
+                                Foto = reader.GetString(4)
                             };
                         }
                     }
                 }
             }
 
-            return Result<UsuarioOutputDto>.Success(clienteOutputDto, "Obtido Cliente com sucesso");
+            return Result<UsuarioOutputDto>.Success(usuarioOutputDto, "Obtido usuario com sucesso");
         }
         catch (Exception e)
         {
-            return Result<UsuarioOutputDto>.Error($"Erro ao obter Cliente: {e.Message}");
+            return Result<UsuarioOutputDto>.Error($"Erro ao obter usuario: {e.Message}");
         }
         
     }
 
-    public Task<Result<UsuarioOutputDto?>> ObterPorId(long id)
-    {
-        throw new NotImplementedException();
-    }
 
-    public Task<Result<List<UsuarioOutputDto>?>> ObterTodos()
-    {
-        throw new NotImplementedException();
-    }
 
-    public async Task<Result<List<UsuarioOutputDto>?>> ObterTodosClientes()
+    public async Task<Result<List<UsuarioOutputDto>?>> ObterTodos()
     {
-        List<UsuarioOutputDto>? clientesOutputDtos = new List<UsuarioOutputDto>();
+        List<UsuarioOutputDto>? usuariosOutputDtos = new List<UsuarioOutputDto>();
         try
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var query = "SELECT * FROM AGENCIAEVENTOS;";
+                var query = "SELECT id, nome, email, telefone, foto FROM usuario;";
                 using (var command = new NpgsqlCommand(query, connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         while(await reader.ReadAsync())
                         {
-                            clientesOutputDtos = new List<UsuarioOutputDto>()
+                            usuariosOutputDtos = new List<UsuarioOutputDto>()
                             {
                                 new UsuarioOutputDto()
                                 {
                                     Id = reader.GetInt64(0),
-                                    Nif = reader.GetString(1),
-                                    Nome = reader.GetString(2),
-                                    Email = reader.GetString(3),
-                                    Telefone = reader.GetString(4),
-                                    Avatar = reader.GetString(5)
+                                    Nome = reader.GetString(1),
+                                    Email = reader.GetString(2),
+                                    Telefone = reader.GetString(3),
+                                    Foto = reader.GetString(4)
                                 }
                             };
                         }
@@ -147,7 +140,7 @@ public class UsuarioRepository : IUsuarioRepository
                 }
             }
             
-            return Result<List<UsuarioOutputDto>>.Success(clientesOutputDtos, "Obtidas todas Agencia de Eventos com sucesso");
+            return Result<List<UsuarioOutputDto>>.Success(usuariosOutputDtos, "Obtidas todas Agencia de Eventos com sucesso");
         }
         catch (Exception e)
         {
@@ -155,9 +148,9 @@ public class UsuarioRepository : IUsuarioRepository
         }
     }
 
-    public async Task<Result<List<UsuarioOutputDto>?>> ObterTodosClientesPorPesquisa(string consulta)
+    public async Task<Result<List<UsuarioOutputDto>?>> ObterTodosusuariosPorPesquisa(string consulta)
     {
-        List<UsuarioOutputDto>? clientesOutputDtos = new List<UsuarioOutputDto>();
+        List<UsuarioOutputDto>? usuariosOutputDtos = new List<UsuarioOutputDto>();
         try
         {
             using (var connection = new NpgsqlConnection(_connectionString))
@@ -170,16 +163,15 @@ public class UsuarioRepository : IUsuarioRepository
                     {
                         while(await reader.ReadAsync())
                         {
-                            clientesOutputDtos = new List<UsuarioOutputDto>()
+                            usuariosOutputDtos = new List<UsuarioOutputDto>()
                             {
                                 new UsuarioOutputDto()
                                 {
                                     Id = reader.GetInt64(0),
-                                    Nif = reader.GetString(1),
                                     Nome = reader.GetString(2),
                                     Email = reader.GetString(3),
                                     Telefone = reader.GetString(4),
-                                    Avatar = reader.GetString(5)
+                                    Foto = reader.GetString(5)
                                 }
                             };
                         }
@@ -187,7 +179,7 @@ public class UsuarioRepository : IUsuarioRepository
                 }
             }
             
-            return Result<List<UsuarioOutputDto>>.Success(clientesOutputDtos, "Obtidas todas Agencia de Eventos com sucesso");
+            return Result<List<UsuarioOutputDto>>.Success(usuariosOutputDtos, "Obtidas todas Agencia de Eventos com sucesso");
         }
         catch (Exception e)
         {

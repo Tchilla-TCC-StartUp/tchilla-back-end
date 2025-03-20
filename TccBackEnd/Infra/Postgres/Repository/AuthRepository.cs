@@ -47,12 +47,13 @@ public class AuthRepository : IAuthRepository
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "INSERT INTO usuario(NOME, TELEFONE, EMAIL, SENHA_HASH, TIPO) VALUES(@nome, @nif, @telefone, @email, @senha, @tipo)";
+        var query = "INSERT INTO usuario(NOME, TELEFONE, EMAIL, FOTO, SENHA_HASH, TIPO) VALUES(@nome, @telefone, @email, @foto, @senha, @tipo)";
         using (var command = new NpgsqlCommand(query, connection))
         {
           command.Parameters.AddWithValue("@nome", usuario.Nome);
           command.Parameters.AddWithValue("@telefone", usuario.Telefone);
           command.Parameters.AddWithValue("@email", usuario.Email);
+          command.Parameters.AddWithValue("@foto", "/Resources/images/user.svg");
           command.Parameters.AddWithValue("@senha", Bcrypt.HashPassword(usuario.SenhaHash));
           command.Parameters.AddWithValue("@tipo", usuario.Tipo.ToString());
           await command.ExecuteNonQueryAsync();

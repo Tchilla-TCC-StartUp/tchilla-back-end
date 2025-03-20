@@ -17,6 +17,7 @@ using TccBackEnd.UseCases.Usuario.ObterTodos;
 using TccBackEnd.UseCases.Usuario.ObterPorId;
 using Npgsql;
 using TccBackEnd.Domain.Enums;
+using TccBackEnd.UseCases.Usuario.Deletar;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,6 +84,7 @@ builder.Services.AddScoped<AtualizarUsuarioUseCase>();
 builder.Services.AddScoped<ObterPorIdUsuarioUseCase>();
 builder.Services.AddScoped<ObterTodosUsuarioUseCase>();
 builder.Services.AddScoped<ObterTodosPorPesquisaUsuarioUseCase>();
+builder.Services.AddScoped<DeletarUsuarioUseCase>();
 
 // builder.Services.AddScoped<IPrestadorServicoRepository>(provider => new PrestadorServicoRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 // builder.Services.AddScoped<CadastrarPrestadorServicoUseCase>();
