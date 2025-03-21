@@ -124,40 +124,45 @@ public class AuthRepository : IAuthRepository
   }
 
 
-  public async Task<Result<string>> LogOut(long id)
+  public async Task<Result<string>> LogOut(int id)
   {
     try
     {
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "SELECT NOME FROM usuario WHERE ID = @id";
-        using (var command = new NpgsqlCommand(query, connection))
+
+        var selectQuery = "SELECT * FROM usuario WHERE ID = @id";
+        using (var selectCommand = new NpgsqlCommand(selectQuery, connection))
         {
-          command.Parameters.AddWithValue("@id", id);
+          selectCommand.Parameters.AddWithValue("@id", id);
 
-          using (var reader = await command.ExecuteReaderAsync())
+          using (var reader = await selectCommand.ExecuteReaderAsync())
           {
-            if (await reader.ReadAsync() && reader.HasRows)
+            if (!await reader.ReadAsync())
             {
-              query = "INSERT INTO usuario(LOGADO) VALUES(FALSE) WHERE ID=@id";
-
-              command.Parameters.AddWithValue("@id", id);
-              await command.ExecuteNonQueryAsync();
-
-              return Result<string>.Success("LogOut usuario com sucesso");
+              return Result<string>.Error("Usuário não encontrado");
             }
           }
         }
 
+        // Faz o logout
+        var updateQuery = "UPDATE usuario SET logado = FALSE WHERE ID = @id";
+        using (var updateCommand = new NpgsqlCommand(updateQuery, connection))
+        {
+          updateCommand.Parameters.AddWithValue("@id", id);
+          await updateCommand.ExecuteNonQueryAsync();
+        }
+
+        return Result<string>.Success("LogOut do usuário realizado com sucesso");
       }
-      return Result<string>.Success($"LogOut usuario com sucesso");
     }
     catch (Exception e)
     {
-      return Result<string>.Error($"Erro ao Logar usuario: {e.Message}");
+      return Result<string>.Error($"Erro ao fazer LogOut do usuário: {e.Message}");
     }
   }
+
 
   public Task<Result<string>> ForgotPassword(string email)
   {

@@ -10,7 +10,7 @@ public class LogOutUseCase
   {
     _authRepository = authRepository;
   }
-  public async Task<Result<string>> Executar(long id)
+  public async Task<Result<string>> Executar(int id)
   {
     return (Result<string>) await _authRepository.LogOut(id);
   }

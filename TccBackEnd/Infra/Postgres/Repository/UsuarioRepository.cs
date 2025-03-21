@@ -49,7 +49,7 @@ public class UsuarioRepository : IUsuarioRepository
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var query = "INSERT INTO usuario(nome, email, telefone, tipo, senha_hash) VALUES(@nome, @email, @telefone, @tipo, @senha)";
+                var query = "INSERT INTO usuario(nome, email, telefone, tipo, senha_hash, foto) VALUES(@nome, @email, @telefone, @tipo, @senha, @foto)";
                 using (var command = new NpgsqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@nome", usuario.Nome);
@@ -57,6 +57,8 @@ public class UsuarioRepository : IUsuarioRepository
                     command.Parameters.AddWithValue("@telefone", usuario.Telefone);
                     command.Parameters.AddWithValue("@tipo", usuario.Tipo);
                     command.Parameters.AddWithValue("@senha", Bcrypt.HashPassword(usuario.SenhaHash));
+                    command.Parameters.AddWithValue("@foto", usuario.Foto);
+
                     await command.ExecuteNonQueryAsync();
                 }
             }
