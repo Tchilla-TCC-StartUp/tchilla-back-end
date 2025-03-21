@@ -17,6 +17,21 @@ public class UsuarioController : Controller
         _logger = logger;
         _usuarioService = usuarioService;
     }
+    [HttpGet("getInfoByToken")]
+    public async Task<IActionResult> ObterUsuarioPorToken()
+    {
+        var userIdClaim = User.FindFirst("id");
+        if (userIdClaim == null) 
+            return Unauthorized(new { Error = "Usuário não autenticado" });
+
+        var userId = int.Parse(userIdClaim.Value);
+        Result<UsuarioOutputDto?> result = await _usuarioService.ObterPorId.Executar(userId);
+        _logger.LogInformation("Solicitação de usuario por token.");
+        
+        return result.IsSuccess 
+            ? Ok(result) 
+            : BadRequest(new { Error = result.ErrorMessage });
+    }
 
     [HttpPut("update-perfil")]
     public async Task<IActionResult> Atualizar([FromBody] AtualizarUsuarioDto dto)

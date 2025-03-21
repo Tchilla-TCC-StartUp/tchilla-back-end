@@ -23,7 +23,8 @@ public class CadastrarUsuarioUseCase
             Telefone = dto.Telefone,
             Email = dto.Email,
             Tipo = dto.Tipo,
-            SenhaHash = dto.Senha
+            SenhaHash = dto.Senha,
+            Foto = "/Resources/images/user.svg"
         };
         
         return (Result<string>) await _usuarioRepository.Cadastrar(usuario);

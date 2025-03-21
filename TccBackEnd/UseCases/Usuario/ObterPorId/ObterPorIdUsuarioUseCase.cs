@@ -12,7 +12,7 @@ namespace TccBackEnd.UseCases.Usuario.ObterPorId;
          _usuarioRepository = usuarioRepository;
      }
 
-     public async Task<Result<UsuarioOutputDto?>> Executar(long id)
+     public async Task<Result<UsuarioOutputDto?>> Executar(int id)
      {
          return (Result<UsuarioOutputDto?>) await _usuarioRepository.ObterPorId(id);
      }

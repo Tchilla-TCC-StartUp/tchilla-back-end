@@ -17,6 +17,10 @@
       "PackagePath": "staticwebassets/Resources/images/Welcome-cuate.svg"
     },
     {
+      "Id": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/Resources/images/user.svg",
+      "PackagePath": "staticwebassets/Resources/images/user.svg"
+    },
+    {
       "Id": "obj/Debug/net8.0/staticwebassets/msbuild.TccBackEnd.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

@@ -8,7 +8,7 @@ public interface IUsuarioRepository
 {
     Task<Result<string>> Cadastrar(Usuario usuario);
     Task<Result<string>> Atualizar(Usuario usuario);
-    Task<Result<UsuarioOutputDto?>> ObterPorId(long id);
+    Task<Result<UsuarioOutputDto?>> ObterPorId(int id);
     Task<Result<List<UsuarioOutputDto>?>> ObterTodos();
     Task<Result<List<UsuarioOutputDto>?>> ObterTodosPorPesquisa(string consulta);
     Task<Result<string>> DeletarUsuario(int idUsuario);
