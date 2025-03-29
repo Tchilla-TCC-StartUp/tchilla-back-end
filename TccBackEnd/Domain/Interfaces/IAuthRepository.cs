@@ -10,4 +10,6 @@ public interface IAuthRepository
   Task<Result<string>> LogOut(int id);
   Task<Result<string>> ForgotPassword(string email);
   Task<Result<string>> VerificarEmail(string token);
+  Task<Result<string>> TrocarSenha(int userId, string newPassword);
+
 }

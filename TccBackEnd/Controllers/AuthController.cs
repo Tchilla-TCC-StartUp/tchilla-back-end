@@ -56,12 +56,19 @@ public class AuthController : ControllerBase
         ? Ok(result)
         : BadRequest(new { Error = result.ErrorMessage });
   }
-
+  
+  [Authorize]
   [HttpPut("change-password")]
-  public async Task<IActionResult> TrocarSenha([FromBody] CadastrarUsuarioDto dto)
+  public async Task<IActionResult> TrocarSenha(string oldPassword, string newPassword)
   {
-    var result = await _authService.Cadastrar.Executar(dto);
-    _logger.LogInformation("S4olicitação de cadastro de usuário");
+    var userIdClaim = User.FindFirst("id");
+    if (userIdClaim == null)
+      return Unauthorized(new { Error = "Usuário não autenticado" });
+        
+    int userId = int.Parse(userIdClaim.Value);
+    
+    var result = await _authService.TrocarSenha.Executar(userId, oldPassword, newPassword);
+    _logger.LogInformation("Solicitação de alteração de Senha de usuário");
     return result.IsSuccess
         ? Ok(result)
         : BadRequest(new { Error = result.ErrorMessage });

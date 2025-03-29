@@ -32,13 +32,40 @@ public class AuthRepository : IAuthRepository
       audience: "Tchilla",
       claims: new List<Claim>{
         new Claim("id", usuario.Id.ToString()),
-        new Claim("nome", usuario.Nome)
+        new Claim("nome", usuario.Nome),
+        new Claim("tipo", usuario.Tipo.ToString())
       },
       expires: DateTime.Now.AddMonths(6),
       signingCredentials: creds
     );
 
     return new JwtSecurityTokenHandler().WriteToken(token);
+  }
+  
+  public async Task<Result<string>> TrocarSenha(int userId, string newPassword)
+  {
+    try
+    {
+      using (var connection = new NpgsqlConnection(_connectionString))
+      {
+        await connection.OpenAsync();
+        var query = "Update usuario set senha_hash = @novaSenha_hash WHERE id = @id";
+
+        using (var command = new NpgsqlCommand(query, connection))
+        {
+          command.Parameters.AddWithValue("@novaSenha_hash", Bcrypt.HashPassword(newPassword));
+
+          await command.ExecuteNonQueryAsync();
+          
+          await connection.CloseAsync();
+        }
+      }
+      return Result<string>.Success("Sucesso", "Senha alterada com sucesso");
+    }
+    catch (Exception e)
+    {
+      return Result<string>.Error($"Erro ao Trocar Senha de usuário: {e.Message}");
+    }
   }
   public async Task<Result<string>> CadastrarUsuario(Usuario usuario)
   {

@@ -17,6 +17,7 @@ using TccBackEnd.UseCases.Usuario.ObterTodos;
 using TccBackEnd.UseCases.Usuario.ObterPorId;
 using Npgsql;
 using TccBackEnd.Domain.Enums;
+using TccBackEnd.UseCases.Auth.ChangePassword;
 using TccBackEnd.UseCases.Usuario.Deletar;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -95,6 +96,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CadastrarUsuarioUseCase>();
 builder.Services.AddScoped<CadastrarUsuarioUseCase>();
 builder.Services.AddScoped<LogarUseCase>();
+builder.Services.AddScoped<ChangePasswordUseCase>();
 builder.Services.AddScoped<LogOutUseCase>();
 
 builder.Services.AddScoped<ISearchRepository>(provider => new SearchRepository(builder.Configuration.GetConnectionString("DefaultConnection")));

@@ -19,13 +19,14 @@ public class UsuarioRepository : IUsuarioRepository
     {
         try
         {
-            using (var connection = new NpgsqlConnection( _connectionString))
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
                 var query = "UPDATE usuario SET nome = @nome, email = @email, telefone = @telefone WHERE id = @id";
                 using (var command = new NpgsqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@nome", usuario.Nome);
+                    command.Parameters.AddWithValue("@email", usuario.Email);
                     command.Parameters.AddWithValue("@telefone", usuario.Telefone);
                     command.Parameters.AddWithValue("@id", usuario.Id);
                     
@@ -134,7 +135,7 @@ public class UsuarioRepository : IUsuarioRepository
                                     Nome = reader.GetString(1),
                                     Email = reader.GetString(2),
                                     Telefone = reader.GetString(3),
-                                    Foto = reader.GetString(4)
+                                    Foto = reader.GetString(4) 
                                 }
                             };
                         }
@@ -142,7 +143,7 @@ public class UsuarioRepository : IUsuarioRepository
                 }
             }
             
-            return Result<List<UsuarioOutputDto>>.Success(usuariosOutputDtos, "Obtidas todas Agencia de Eventos com sucesso");
+            return Result<List<UsuarioOutputDto>>.Success(usuariosOutputDtos, "Obtidas todas usuarios de Eventos com sucesso");
         }
         catch (Exception e)
         {
@@ -198,4 +199,6 @@ public class UsuarioRepository : IUsuarioRepository
     {
         throw new NotImplementedException();
     }
+
+    
 }

@@ -33,11 +33,17 @@ public class UsuarioController : Controller
             : BadRequest(new { Error = result.ErrorMessage });
     }
 
-    [HttpPut("update-perfil")]
+    [HttpPut("update")]
     public async Task<IActionResult> Atualizar([FromBody] AtualizarUsuarioDto dto)
     {
+        var userIdClaim = User.FindFirst("id");
+        if (userIdClaim == null) 
+            return Unauthorized(new { Error = "Usuário não autenticado" });
+
+        dto.Id = int.Parse(userIdClaim.Value);
+        
         Result<string> result = await _usuarioService.Atualizar.Executar(dto);
-        _logger.LogInformation("Solicitação de atualização de perfil de usuário.");
+        _logger.LogInformation("Solicitação de atualização de usuário.");
         
         return result.IsSuccess 
             ? Ok(new { Mensagem = "Perfil atualizado com sucesso." }) 
@@ -45,7 +51,7 @@ public class UsuarioController : Controller
     }
 
 
-    [HttpGet("getAll-usuarios")]
+    [HttpGet("getAll")]
     public async Task<IActionResult> ObterTodos()
     {
         Result<List<UsuarioOutputDto?>> result = await _usuarioService.ObterTodos.Executar();
