@@ -21,8 +21,6 @@
              Nome = dto.Nome,
              Telefone = dto.Telefone,
              Email = dto.Email,
-             Foto = dto.Foto,
-             Tipo = dto.Tipo
          };
         
          return (Result<string>) await _usuarioRepository.Atualizar(usuario);
