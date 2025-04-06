@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TccBackEnd.Service;
 using TccBackEnd.UseCases.Auth.Dtos;
+using TccBackEnd.UseCases.PrestadorServico.Dtos;
 using TccBackEnd.UseCases.Usuario.Dtos;
 
 namespace TccBackEnd.Controllers;
@@ -29,6 +30,25 @@ public class AuthController : ControllerBase
     return result.IsSuccess
         ? Ok(result)
         : BadRequest(new { Error = result.ErrorMessage });
+  }
+  [AllowAnonymous]
+  [HttpPost("register/prestador")]
+  public async Task<IActionResult> CadastrarPrestador(CadastrarPrestadorDto dto)
+  {
+    var result = await _authService.CadastrarPrestador.Executar(dto);
+    _logger.LogInformation("Solicitação de cadastro de local de eventos");
+    return result.IsSuccess
+      ? Ok(result)
+      : BadRequest(new { Error = result.ErrorMessage });
+  }
+  
+  [HttpPost("register/agencia")]
+  public async Task<IActionResult> CadastrarAgencia([FromBody] CadastrarAgenciaEventosDto dto)
+  {
+    //Result<string> result = await _agenciaEventosService.Atualizar.Executar(dto);
+    _logger.LogInformation($"Solicitação de atualização de Agencia de eventos");
+    //return (result.IsSuccess) ? CreatedAtAction(nameof(Atualizar), result, null) : BadRequest(new {Error = result.ErrorMessage});
+    return Ok();
   }
   [AllowAnonymous]
   [HttpPost("login")]

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Alias="Bcrypt" Version="4.0.3" />
+    <PackageReference Include="CloudinaryDotNet" Version="1.27.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.6.0" />

@@ -1,16 +1,12 @@
-using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
-using NpgsqlTypes;
 using TccBackEnd.Domain.Entities;
 using TccBackEnd.Domain.Interfaces;
 using TccBackEnd.Shared.Result;
 using TccBackEnd.UseCases.Auth.Dtos;
-using TccBackEnd.UseCases.Usuario.Dtos;
 using Bcrypt = BCrypt.Net.BCrypt;
 
 namespace TccBackEnd.Infra.Postgres.Repository;
@@ -95,6 +91,31 @@ public class AuthRepository : IAuthRepository
     }
 
 
+  }
+  
+  public async Task<Result<string>> CadastrarPrestador(Prestador prestador)
+  {
+
+    try
+    {
+      using (var connection = new NpgsqlConnection(_connectionString))
+      {
+        await connection.OpenAsync();
+        var query = "INSERT INTO PRESTADOR(NOME, NIF, TELEFONE) VALUES(@NOME, @NIF, @TELEFONE)";
+        using (var command = new NpgsqlCommand(query, connection))
+        {
+          command.Parameters.AddWithValue("@NOME", prestador.Nome );
+          command.Parameters.AddWithValue("@NIF", prestador.Nif); 
+          await command.ExecuteScalarAsync();
+        }
+      }
+      return Result<string>.Success($"Cadastrada usuario com sucesso: {prestador.Nome}");
+    }catch (Exception e)
+    {
+      return Result<string>.Error($"Erro ao Cadastrar prestador: {e.Message}");
+    }
+    
+    
   }
 
 

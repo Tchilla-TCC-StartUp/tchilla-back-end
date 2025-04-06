@@ -17,21 +17,28 @@ public class SearchController : Controller
         _searchService = searchService;
     }
 
-    [HttpGet("Place")]
+    [HttpGet("local")]
     public async Task<IActionResult> PesquisarLocal(SearchLocalInputDto dto)
     {
         return Ok();
     }
 
-    [HttpGet("Service")]
+    [HttpGet("servico")]
     public async Task<IActionResult> PesquisarServicos()
     {
         return Ok();
     }
-    
-    [HttpGet("Place-Service")]
-    public async Task<IActionResult> PesquisarLocalServicos()
+    [HttpGet("produto")]
+    public async Task<IActionResult> PesquisarProduto()
+    { 
+        return Ok();
+    }
+        
+    [HttpGet("localServicosOrprodutos")]
+    public async Task<IActionResult> PesquisarLocalServicosOrProdutos()
     {
         return Ok();
     }
+    
+    
 }

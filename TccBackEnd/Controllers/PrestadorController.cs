@@ -1,33 +1,87 @@
-// using Microsoft.AspNetCore.Mvc;
-// using TccBackEnd.UseCases.PrestadorServico.Cadastrar;
-// using TccBackEnd.UseCases.PrestadorServico.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using TccBackEnd.Service;
+using TccBackEnd.UseCases.Local.Dtos;
+using TccBackEnd.UseCases.PrestadorServico.Dtos;
 
-// namespace TccBackEnd.Controllers;
+namespace TccBackEnd.Controllers;
 
-// [ApiController]
-// [Route("api/[controller]")]
-// public class PrestadorController : Controller
-// {
-//     private readonly ILogger<PrestadorController> _logger;
-//     private readonly CadastrarPrestadorServicoUseCase _cadastrarPrestadorServicoUseCase;
-//     public PrestadorController(ILogger<PrestadorController> logger, CadastrarPrestadorServicoUseCase _cadastrarPrestadorServicoUseCase)
-//     {
-//         _logger = logger;
-//         _cadastrarPrestadorServicoUseCase = _cadastrarPrestadorServicoUseCase;
-//     }
+[ApiController]
+[Route("api/[controller]")]
+public class PrestadorController : ControllerBase
+{
+    private readonly ILogger<PrestadorController> _logger;
+    private readonly LocalService _localService;
+    public PrestadorController(ILogger<PrestadorController> logger)
+    {
+        _logger = logger;
+    }
 
-   
-//     [HttpPost("cadastrar")]
-//     public async Task<IActionResult> Cadastrar(CadastrarPrestadorServicoDto dto)
-//     {
-//         try
-//         {
-//             var id = await _cadastrarPrestadorServicoUseCase.Executar(dto);
-//             return CreatedAtAction(nameof(Cadastrar), new { id }, null);
-//         }
-//         catch (Exception e)
-//         {
-//             return BadRequest(new {Error = e.Message});
-//         }
-//     }
-// }
+    [Authorize]
+    [HttpGet("getInfoByToken")]
+    public async Task<IActionResult> ObterPrestadorPorToken()
+    {
+        var userIdClaim = User.FindFirst("id");
+        if (userIdClaim == null) 
+            return Unauthorized(new { Error = "Usuário não autenticado" });
+
+        var userId = int.Parse(userIdClaim.Value);
+        /*Result<UsuarioOutputDto?> result = await _usuarioService.ObterPorId.Executar(userId);
+        _logger.LogInformation("Solicitação de usuario por token.");
+        
+        return result.IsSuccess 
+            ? Ok(result) 
+            : BadRequest(new { Error = result.ErrorMessage });**/
+        return Ok();
+    }
+    
+    [Authorize]
+    [HttpPut("update")]
+    public async Task<IActionResult> Update(CadastrarLocalDto dto)
+    {
+        var userIdClaim = User.FindFirst("id");
+        if (userIdClaim == null)
+            return Unauthorized(new { Error = "Usuário não autenticado" });
+        
+        int userId = int.Parse(userIdClaim.Value);
+    
+        var result = await _localService.Atualizar.Executar(userId, dto);
+        _logger.LogInformation("Solicitação de cadastro de local de eventos");
+        return result.IsSuccess
+            ? Ok(result)
+            : BadRequest(new { Error = result.ErrorMessage });
+    }
+    
+    [AllowAnonymous]
+    [HttpGet("get/{id:int}")]
+    public async Task<IActionResult> GetById(int id, CadastrarLocalDto dto)
+    {
+        var userIdClaim = User.FindFirst("id");
+        if (userIdClaim == null)
+            return Unauthorized(new { Error = "Usuário não autenticado" });
+        
+        int userId = int.Parse(userIdClaim.Value);
+    
+        var result = await _localService.ObterPorId.Executar(userId, dto);
+        _logger.LogInformation("Solicitação de cadastro de local de eventos");
+        return result.IsSuccess
+            ? Ok(result)
+            : BadRequest(new { Error = result.ErrorMessage });
+    }
+    [AllowAnonymous]
+    [HttpGet("getAll")]
+    public async Task<IActionResult> GetAll(CadastrarLocalDto dto)
+    {
+        var userIdClaim = User.FindFirst("id");
+        if (userIdClaim == null)
+            return Unauthorized(new { Error = "Usuário não autenticado" });
+        
+        int userId = int.Parse(userIdClaim.Value);
+    
+        var result = await _localService.Cadastrar.Executar(userId, dto);
+        _logger.LogInformation("Solicitação de cadastro de local de eventos");
+        return result.IsSuccess
+            ? Ok(result)
+            : BadRequest(new { Error = result.ErrorMessage });
+    }
+}

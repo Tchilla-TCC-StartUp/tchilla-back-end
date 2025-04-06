@@ -1,32 +1,39 @@
-// using Microsoft.AspNetCore.Mvc;
-// using TccBackEnd.UseCases.Supervisor.Dtos;
+using Microsoft.AspNetCore.Mvc;
+using TccBackEnd.UseCases.Supervisor.Dtos;
 
-// namespace TccBackEnd.Controllers;
+namespace TccBackEnd.Controllers;
 
-// [ApiController]
-// [Route("api/[controller]")]
-// public class SupervisorController : Controller
-// {
-//     private readonly ILogger<SupervisorController> _logger;
-//     private readonly CadastrarSupervisorUseCase _cadastrarSupervisorUseCase;
-//     public SupervisorController(CadastrarSupervisorUseCase cadastrarSupervisorUseCase)
-//     {
-//         _cadastrarSupervisorUseCase = cadastrarSupervisorUseCase;
-//     }
+[ApiController]
+[Route("api/[controller]")]
+public class SupervisorController : Controller
+{
+    private readonly ILogger<SupervisorController> _logger;
+    public SupervisorController(ILogger<SupervisorController> logger)
+    {
+        _logger = logger;
+    }
 
     
-//     [HttpPost("cadastrar")]
-//     public async Task<IActionResult> Cadastrar([FromBody] CadastrarSupervisorDto dto)
-//     {
-//         try
-//         {
-//             var id = await _cadastrarSupervisorUseCase.Executar(dto);
-//             _logger.Log(LogLevel.Information,$"Cadastrado Supervisor {id} com sucesso");
-//             return CreatedAtAction(nameof(Cadastrar), new { id }, null);
-//         }
-//         catch (Exception e)
-//         {
-//             return BadRequest(new {Error = e.Message});
-//         }
-//     }
-// }
+    [HttpPost("create")]
+    public async Task<IActionResult> Cadastrar([FromBody] CadastrarSupervisorDto dto)
+    {
+        return Ok();
+    }
+    
+    [HttpPut("update")]
+    public async Task<IActionResult> Atualizar([FromBody] CadastrarSupervisorDto dto)
+    {
+        return Ok();
+    }
+    
+    [HttpDelete("delete/{id:int}")]
+    public async Task<IActionResult> RemoverPorid(int id)
+    {
+        return Ok();
+    }
+    [HttpGet("getAll")]
+    public async Task<IActionResult> ObterTodos([FromBody] CadastrarSupervisorDto dto)
+    {
+        return Ok();
+    }
+}

@@ -15,9 +15,9 @@ using TccBackEnd.UseCases.Usuario.Atualizar;
 using TccBackEnd.UseCases.Usuario.ObterTodosPorPesquisa;
 using TccBackEnd.UseCases.Usuario.ObterTodos;
 using TccBackEnd.UseCases.Usuario.ObterPorId;
-using Npgsql;
-using TccBackEnd.Domain.Enums;
 using TccBackEnd.UseCases.Auth.ChangePassword;
+using TccBackEnd.UseCases.Endereco.Cadastrar;
+using TccBackEnd.UseCases.Search;
 using TccBackEnd.UseCases.Usuario.Deletar;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,7 +43,14 @@ builder.Services.AddAuthentication(options =>
 // Adding Swagger Configuration
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options => {
-    options.SwaggerDoc("v1", new OpenApiInfo {Title = "TccBackend", Version = "v1", Description = "Tchilla é uma plataforma digital que conecta Clientes a Locais, Serviços e ou Produtos de Prestadores de Serviços e Agências de Eventos."});
+    options.SwaggerDoc(
+        "v1",
+        new OpenApiInfo
+        {
+            Title = "TccBackend",
+            Version = "v1",
+            Description = "Tchilla é uma plataforma digital que conecta Clientes a Locais, Serviços e ou Produtos de Prestadores de Serviços e Agências de Eventos."
+        });
 
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -89,8 +96,6 @@ builder.Services.AddScoped<DeletarUsuarioUseCase>();
 
 // builder.Services.AddScoped<IPrestadorServicoRepository>(provider => new PrestadorServicoRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 // builder.Services.AddScoped<CadastrarPrestadorServicoUseCase>();
-NpgsqlConnection.GlobalTypeMapper.MapEnum<UsuarioTipo>("usuario_tipo");
-
 builder.Services.AddScoped<IAuthRepository>(provider => new AuthRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CadastrarUsuarioUseCase>();
@@ -101,6 +106,15 @@ builder.Services.AddScoped<LogOutUseCase>();
 
 builder.Services.AddScoped<ISearchRepository>(provider => new SearchRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<SearchService>();
+builder.Services.AddScoped<SearchLocalUseCase>();
+
+builder.Services.AddScoped<IEnderecoRepository>(provider =>
+    new EnderecoRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<EnderecoService>();
+builder.Services.AddScoped<CadastrarEnderecoUseCase>();
+builder.Services.AddScoped<CadastrarPaisUseCase>();
+builder.Services.AddScoped<CadastrarProvinciaUseCase>();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -117,6 +131,8 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     app.UseSwaggerUI();
 }
 app.UseCors(cors => cors.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+app.UseWebSockets();
 
 app.UseHttpsRedirection();
 

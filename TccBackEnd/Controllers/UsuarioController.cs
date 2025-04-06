@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TccBackEnd.Service;
 using TccBackEnd.Shared.Result;
@@ -17,6 +18,7 @@ public class UsuarioController : Controller
         _logger = logger;
         _usuarioService = usuarioService;
     }
+    [Authorize]
     [HttpGet("getInfoByToken")]
     public async Task<IActionResult> ObterUsuarioPorToken()
     {

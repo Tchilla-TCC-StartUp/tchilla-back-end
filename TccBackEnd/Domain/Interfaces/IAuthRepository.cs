@@ -7,6 +7,7 @@ public interface IAuthRepository
 {
   Task<Result<string>> Logar(LogarCredenciaisDto dto);
   Task<Result<string>> CadastrarUsuario(Usuario usuario);
+  Task<Result<string>> CadastrarPrestador(Prestador prestadorServico);
   Task<Result<string>> LogOut(int id);
   Task<Result<string>> ForgotPassword(string email);
   Task<Result<string>> VerificarEmail(string token);
