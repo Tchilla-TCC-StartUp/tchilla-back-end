@@ -16,7 +16,11 @@ using TccBackEnd.UseCases.Usuario.ObterTodosPorPesquisa;
 using TccBackEnd.UseCases.Usuario.ObterTodos;
 using TccBackEnd.UseCases.Usuario.ObterPorId;
 using TccBackEnd.UseCases.Auth.ChangePassword;
+using TccBackEnd.UseCases.Cadastrar.Local;
 using TccBackEnd.UseCases.Endereco.Cadastrar;
+using TccBackEnd.UseCases.Local.Atualizar;
+using TccBackEnd.UseCases.Local.ObterPorId;
+using TccBackEnd.UseCases.PrestadorServico.Cadastrar;
 using TccBackEnd.UseCases.Search;
 using TccBackEnd.UseCases.Usuario.Deletar;
 
@@ -94,11 +98,11 @@ builder.Services.AddScoped<ObterTodosUsuarioUseCase>();
 builder.Services.AddScoped<ObterTodosPorPesquisaUsuarioUseCase>();
 builder.Services.AddScoped<DeletarUsuarioUseCase>();
 
-// builder.Services.AddScoped<IPrestadorServicoRepository>(provider => new PrestadorServicoRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
-// builder.Services.AddScoped<CadastrarPrestadorServicoUseCase>();
+builder.Services.AddScoped<IPrestadorRepository>(provider => new PrestadorServicoRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddScoped<IAuthRepository>(provider => new AuthRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<CadastrarUsuarioUseCase>();
+builder.Services.AddScoped<CadastrarPrestadorUseCase>();
 builder.Services.AddScoped<CadastrarUsuarioUseCase>();
 builder.Services.AddScoped<LogarUseCase>();
 builder.Services.AddScoped<ChangePasswordUseCase>();
@@ -115,6 +119,13 @@ builder.Services.AddScoped<CadastrarEnderecoUseCase>();
 builder.Services.AddScoped<CadastrarPaisUseCase>();
 builder.Services.AddScoped<CadastrarProvinciaUseCase>();
 
+
+builder.Services.AddScoped<ILocalRepository>(provider =>
+    new LocalRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<LocalService>();
+builder.Services.AddScoped<CadastrarLocalUseCase>();
+builder.Services.AddScoped<AtualizarLocalUseCase>();
+builder.Services.AddScoped<ObterPorIdLocalUseCase>();
 // Add services to the container.
 
 builder.Services.AddControllers();

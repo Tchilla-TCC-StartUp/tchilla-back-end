@@ -62,7 +62,7 @@ public class AgenciaController : ControllerBase
         return (result.IsSuccess) ? CreatedAtAction(nameof(ObterTodos), result, null) : BadRequest(new {Error = result.ErrorMessage});
     }
     
-    [HttpGet("getAll/{consulta:string}")]
+    [HttpGet("getAll/{consulta}")]
     public async Task<IActionResult> ObterTodasPorPesquisa(string consulta)
     {
         Result<List<AgenciaEventosOutputDto>?> result = await _agenciaEventosService.ObterTodasPorPesquisa.Executar(consulta);
