@@ -65,14 +65,14 @@ public class CategoriaController : ControllerBase
 
   [Authorize]
   [HttpGet("getAll")]
-  public async Task<IActionResult> ObterTodas([FromBody] CategoriaDto dto)
+  public async Task<IActionResult> ObterTodas()
   {
     var userId = User.FindFirstValue("id");
         if (userId == null)
             return Unauthorized(new { Error = "Usuário não autenticado" });
 
-    var result = await _categoriaService.Cadastrar.Executar(dto);
-    _logger.LogInformation("Solicitação de cadastro de categoria");
+    var result = await _categoriaService.ObterTodas.Executar();
+    _logger.LogInformation("Solicitação de todas categorias");
     return result.IsSuccess
         ? Ok(result)
         : BadRequest(new { Error = result.ErrorMessage });

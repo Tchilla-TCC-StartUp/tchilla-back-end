@@ -5,8 +5,10 @@ namespace TccBackEnd.Service;
 public class CategoriaService 
 {
   public CadastrarCategoriaUseCase Cadastrar {get;}
-  public CategoriaService(CadastrarCategoriaUseCase cadastrar)
+  public ObterTodasCategoriaUseCase ObterTodas {get;}
+  public CategoriaService(CadastrarCategoriaUseCase cadastrar, ObterTodasCategoriaUseCase obterTodas)
   {
-    Cadastrar = cadastrar;  
+    Cadastrar = cadastrar; 
+    ObterTodas = obterTodas;
   }
 }

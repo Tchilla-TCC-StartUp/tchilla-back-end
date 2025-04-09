@@ -133,6 +133,7 @@ builder.Services.AddScoped<ICategoriaRepository>(provider =>
     new CategoriaRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<CategoriaService>();
 builder.Services.AddScoped<CadastrarCategoriaUseCase>();
+builder.Services.AddScoped<ObterTodasCategoriaUseCase>();   
 // Add services to the container.
 
 builder.Services.AddControllers();

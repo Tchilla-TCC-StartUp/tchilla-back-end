@@ -1,6 +1,7 @@
 using TccBackEnd.Domain.Entities;
 using TccBackEnd.Domain.Interfaces;
 using TccBackEnd.Shared.Result;
+using TccBackEnd.UseCases.Categoria.Dtos;
 
 namespace TccBackEnd.Infra.Postgres.Repository;
 
@@ -41,18 +42,100 @@ public class CategoriaRepository : ICategoriaRepository
     }
   }
 
-  public Task<Result<string>> AtualizarCategoria(Categoria categoria)
+  public async Task<Result<string>> AtualizarCategoria(Categoria categoria)
   {
-    throw new NotImplementedException();
+    try
+    {
+      using (var connection = new Npgsql.NpgsqlConnection(_connectionString))
+      {
+        await connection.OpenAsync(); 
+        var query = "INSERT INTO categoria (nome, descricao) VALUES (@Nome, @Descricao)";
+        
+        using (var command = new Npgsql.NpgsqlCommand(query, connection))
+        {
+          command.Parameters.AddWithValue("@Nome", categoria.Nome);
+          command.Parameters.AddWithValue("@Descricao", categoria.Descricao);
+
+          int rowsAffected = await command.ExecuteNonQueryAsync();
+          
+          if (rowsAffected > 0)
+            return Result<string>.Success("Categoria criada com sucesso");
+          else
+            return Result<string>.Error("Erro ao criar categoria");
+        }
+
+      }
+    }
+    catch (Exception ex)
+    {
+      return Result<string>.Error("Erro ao criar categoria: " + ex.Message);
+    }
   }
 
-  public Task<Result<string>> RemoverCategoria(Categoria categoria)
+  public async Task<Result<string>> RemoverCategoria(Categoria categoria)
   {
-    throw new NotImplementedException();
+    try
+    {
+      using (var connection = new Npgsql.NpgsqlConnection(_connectionString))
+      {
+        await connection.OpenAsync(); 
+        var query = "Remote from INTO categoria (nome, descricao) VALUES (@Nome, @Descricao)";
+        
+        using (var command = new Npgsql.NpgsqlCommand(query, connection))
+        {
+          command.Parameters.AddWithValue("@Nome", categoria.Nome);
+          command.Parameters.AddWithValue("@Descricao", categoria.Descricao);
+
+          int rowsAffected = await command.ExecuteNonQueryAsync();
+          
+          if (rowsAffected > 0)
+            return Result<string>.Success("Categoria criada com sucesso");
+          else
+            return Result<string>.Error("Erro ao criar categoria");
+        }
+
+      }
+    }
+    catch (Exception ex)
+    {
+      return Result<string>.Error("Erro ao criar categoria: " + ex.Message);
+    }
   }
 
-  public Task<Result<string>> ObterTodasCategorias(Categoria categoria)
+  public async Task<Result<List<CategoriaOutPutDto>>> ObterTodasCategorias()
   {
-    throw new NotImplementedException();
+    List<CategoriaOutPutDto> categorias = new List<CategoriaOutPutDto>();
+    try
+    {
+      using (var connection = new Npgsql.NpgsqlConnection(_connectionString))
+      {
+        await connection.OpenAsync(); 
+        var query = "INSERT INTO categoria (nome, descricao) VALUES (@Nome, @Descricao)";
+        
+        using (var command = new Npgsql.NpgsqlCommand(query, connection))
+        {
+          using (var reader = await command.ExecuteReaderAsync())
+          {
+            while (await reader.ReadAsync() && reader.HasRows)
+            {
+              categorias.Add(
+                new CategoriaOutPutDto
+                {
+                  Nome = reader.GetString(0),
+                  Descricao = reader.GetString(1)
+                }
+              );
+            }
+            return Result<List<CategoriaOutPutDto>>.Success("Categorias obtidas com sucesso");
+          }
+          
+        }
+
+      }
+    }
+    catch (Exception ex)
+    {
+      return Result<List<CategoriaOutPutDto>>.Error($"Erro ao carregar categorias");
+    }
   }
 }
