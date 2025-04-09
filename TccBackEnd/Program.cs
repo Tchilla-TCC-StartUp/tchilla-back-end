@@ -82,7 +82,7 @@ builder.Services.AddSwaggerGen(options => {
 });
 
 // Reposistories and Use Cases configuration
-// builder.Services.AddScoped<IAgenciaEventosRepository>(provider => new AgenciaEventosRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IAgenciaEventosRepository>(provider => new AgenciaEventosRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<AgenciaEventosService>();
 // builder.Services.AddScoped<AtualizarAgenciaEventosUseCase>();
 builder.Services.AddScoped<ObterPorIdAgenciaEventosUseCase>();

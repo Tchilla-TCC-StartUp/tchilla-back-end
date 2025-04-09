@@ -18,7 +18,11 @@ public class CadastrarLocalUseCase
         {
             Nome = dto.Nome,
             Descricao = dto.Descricao,
-            PrecoHora = dto.PrecoHora
+            PrecoHora = dto.PrecoHora,
+            Capacidade = dto.Capacidade,
+            EnderecoId = dto.EnderecoId,
+            CategoriaId = dto.CategoriaId,
+            PrestadorId = userId,
         };
         return await _repository.Create(novoLocal);
     }
