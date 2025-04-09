@@ -108,7 +108,7 @@ public class UsuarioRepository : IUsuarioRepository
             return Result<UsuarioOutputDto>.Error($"Erro ao obter usuario: {e.Message}");
         }
 
-        }
+    }
 
 
 
@@ -136,19 +136,7 @@ public class UsuarioRepository : IUsuarioRepository
                                 Foto = reader.GetString(4)
                             });
                         }
-                        {
-                            usuariosOutputDtos = new List<UsuarioOutputDto>()
-                            {
-                                new UsuarioOutputDto()
-                                {
-                                    Id = reader.GetInt64(0),
-                                    Nome = reader.GetString(1),
-                                    Email = reader.GetString(2),
-                                    Telefone = reader.GetString(3),
-                                    Foto = reader.GetString(4)
-                                }
-                            };
-                        }
+
                     }
                 }
             }
@@ -200,14 +188,73 @@ public class UsuarioRepository : IUsuarioRepository
         }
     }
 
-    public Task<Result<List<UsuarioOutputDto>?>> ObterTodosPorPesquisa(string consulta)
+    public async Task<Result<List<UsuarioOutputDto>?>> ObterTodosPorPesquisa(string consulta)
     {
-        throw new NotImplementedException();
+        var usuariosOutputDtos = new List<UsuarioOutputDto>();
+        try
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var query = @"
+                SELECT id, nome, email, telefone, foto
+                FROM usuario
+                WHERE nome=@consulta OR email=@consulta OR telefone=@consulta";
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@consulta", $"%{consulta}%");
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync() && reader.HasRows)
+                        {
+                            usuariosOutputDtos.Add(new UsuarioOutputDto
+                            {
+                                Id = reader.GetInt64(0),
+                                Nome = reader.GetString(1),
+                                Email = reader.GetString(2),
+                                Telefone = reader.GetString(3),
+                                Foto = reader.GetString(4)
+                            });
+                        }
+                    }
+                }
+            }
+
+            return Result<List<UsuarioOutputDto>>.Success(usuariosOutputDtos, "Pesquisa realizada com sucesso.");
+        }
+        catch (Exception e)
+        {
+            return Result<List<UsuarioOutputDto>>.Error($"Erro ao pesquisar usuários: {e.Message}");
+        }
     }
 
-    public Task<Result<string>> DeletarUsuario(int idUsuario)
+
+    public async Task<Result<string>> DeletarUsuario(int idUsuario)
     {
-        throw new NotImplementedException();
+        try
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var query = "DELETE FROM usuario WHERE id = @id";
+
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", idUsuario);
+                    var rowsAffected = await command.ExecuteNonQueryAsync();
+
+                    if (rowsAffected == 0)
+                        return Result<string>.Error("Usuário não encontrado.");
+
+                    return Result<string>.Success("Usuário deletado com sucesso.");
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            return Result<string>.Error($"Erro ao deletar usuário: {e.Message}");
+        }
     }
 
 

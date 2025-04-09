@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "l3XGSLoEihil3wgR+FBNhb/v/kxDyGYeNMWL/VZOxsA=",
+  "Hash": "WS/2rt5zij4cDc0tugqwprCE8IhDEzj9cnYXrzmoqN4=",
   "Source": "TccBackEnd",
   "BasePath": "_content/TccBackEnd",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "TccBackEnd/wwwroot",
       "Source": "TccBackEnd",
-      "ContentRoot": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/",
+      "ContentRoot": "/home/celsonpaixao/Desktop/tchilla-back-end/TccBackEnd/wwwroot/",
       "BasePath": "_content/TccBackEnd",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/Resources/images/House searching-cuate.svg",
+      "Identity": "/home/celsonpaixao/Desktop/tchilla-back-end/TccBackEnd/wwwroot/Resources/images/House searching-cuate.svg",
       "SourceId": "TccBackEnd",
       "SourceType": "Discovered",
-      "ContentRoot": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/",
+      "ContentRoot": "/home/celsonpaixao/Desktop/tchilla-back-end/TccBackEnd/wwwroot/",
       "BasePath": "_content/TccBackEnd",
       "RelativePath": "Resources/images/House searching-cuate.svg",
       "AssetKind": "All",
@@ -36,10 +36,10 @@
       "OriginalItemSpec": "wwwroot/Resources/images/House searching-cuate.svg"
     },
     {
-      "Identity": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/Resources/images/user.svg",
+      "Identity": "/home/celsonpaixao/Desktop/tchilla-back-end/TccBackEnd/wwwroot/Resources/images/user.svg",
       "SourceId": "TccBackEnd",
       "SourceType": "Discovered",
-      "ContentRoot": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/",
+      "ContentRoot": "/home/celsonpaixao/Desktop/tchilla-back-end/TccBackEnd/wwwroot/",
       "BasePath": "_content/TccBackEnd",
       "RelativePath": "Resources/images/user.svg",
       "AssetKind": "All",
@@ -55,10 +55,10 @@
       "OriginalItemSpec": "wwwroot/Resources/images/user.svg"
     },
     {
-      "Identity": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/Resources/images/Wedding planner-cuate.svg",
+      "Identity": "/home/celsonpaixao/Desktop/tchilla-back-end/TccBackEnd/wwwroot/Resources/images/Wedding planner-cuate.svg",
       "SourceId": "TccBackEnd",
       "SourceType": "Discovered",
-      "ContentRoot": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/",
+      "ContentRoot": "/home/celsonpaixao/Desktop/tchilla-back-end/TccBackEnd/wwwroot/",
       "BasePath": "_content/TccBackEnd",
       "RelativePath": "Resources/images/Wedding planner-cuate.svg",
       "AssetKind": "All",
@@ -74,10 +74,10 @@
       "OriginalItemSpec": "wwwroot/Resources/images/Wedding planner-cuate.svg"
     },
     {
-      "Identity": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/Resources/images/Wedding-cuate.svg",
+      "Identity": "/home/celsonpaixao/Desktop/tchilla-back-end/TccBackEnd/wwwroot/Resources/images/Wedding-cuate.svg",
       "SourceId": "TccBackEnd",
       "SourceType": "Discovered",
-      "ContentRoot": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/",
+      "ContentRoot": "/home/celsonpaixao/Desktop/tchilla-back-end/TccBackEnd/wwwroot/",
       "BasePath": "_content/TccBackEnd",
       "RelativePath": "Resources/images/Wedding-cuate.svg",
       "AssetKind": "All",
@@ -93,10 +93,10 @@
       "OriginalItemSpec": "wwwroot/Resources/images/Wedding-cuate.svg"
     },
     {
-      "Identity": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/Resources/images/Welcome-cuate.svg",
+      "Identity": "/home/celsonpaixao/Desktop/tchilla-back-end/TccBackEnd/wwwroot/Resources/images/Welcome-cuate.svg",
       "SourceId": "TccBackEnd",
       "SourceType": "Discovered",
-      "ContentRoot": "/home/jesseingles/dev/School/TCC/TccBackEnd/wwwroot/",
+      "ContentRoot": "/home/celsonpaixao/Desktop/tchilla-back-end/TccBackEnd/wwwroot/",
       "BasePath": "_content/TccBackEnd",
       "RelativePath": "Resources/images/Welcome-cuate.svg",
       "AssetKind": "All",
