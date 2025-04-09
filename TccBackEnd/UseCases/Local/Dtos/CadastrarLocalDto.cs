@@ -4,7 +4,6 @@ public class CadastrarLocalDto
 {
     public string Nome { get; set; }
     public string Descricao { get; set; }
-    public List<IFormFile> Imagens { get; set; }
     public int Capacidade { get; set; }
     public decimal PrecoHora { get; set; }
     public int? PrestadorId { get; set; }
