@@ -8,7 +8,6 @@ public class Usuario
     public string Email { get; set; }
     public string SenhaHash { get; set; }
     public string Telefone { get; set; }
-    public UsuarioTipo Tipo { get; set; }
     public string Foto { get; set; }
     public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
 }

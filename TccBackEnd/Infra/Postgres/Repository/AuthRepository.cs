@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
-using NpgsqlTypes;
 using TccBackEnd.Domain.Entities;
 using TccBackEnd.Domain.Interfaces;
 using TccBackEnd.Shared.Result;
@@ -30,7 +29,6 @@ public class AuthRepository : IAuthRepository
       claims: new List<Claim>{
         new Claim("id", usuario.Id.ToString()),
         new Claim("nome", usuario.Nome),
-        new Claim("tipo", usuario.Tipo.ToString())
       },
       expires: DateTime.Now.AddMonths(6),
       signingCredentials: creds
@@ -71,7 +69,7 @@ public class AuthRepository : IAuthRepository
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "INSERT INTO usuario(NOME, TELEFONE, EMAIL, FOTO, SENHA_HASH, TIPO) VALUES(@nome, @telefone, @email, @foto, @senha, @tipo)";
+        var query = "INSERT INTO usuario(NOME, TELEFONE, EMAIL, FOTO, SENHA_HASH) VALUES(@nome, @telefone, @email, @foto, @senha)";
         using (var command = new NpgsqlCommand(query, connection))
         {
           command.Parameters.AddWithValue("@nome", usuario.Nome);
@@ -79,7 +77,6 @@ public class AuthRepository : IAuthRepository
           command.Parameters.AddWithValue("@email", usuario.Email);
           command.Parameters.AddWithValue("@foto", "/Resources/images/user.svg");
           command.Parameters.AddWithValue("@senha", Bcrypt.HashPassword(usuario.SenhaHash));
-          command.Parameters.AddWithValue("@tipo", usuario.Tipo.ToString());
           await command.ExecuteNonQueryAsync();
         }
       }
@@ -88,7 +85,7 @@ public class AuthRepository : IAuthRepository
     }
     catch (Exception e)
     {
-      return Result<string>.Error($"Erro ao Cadastrar usuario: {e.Message}");
+      return Result<string>.Error($"Erro ao aqui Cadastrar usuario: {e.Message}");
     }
 
 
@@ -127,7 +124,7 @@ public class AuthRepository : IAuthRepository
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "SELECT ID, NOME, EMAIL, TELEFONE, SENHA_HASH, TIPO FROM usuario WHERE EMAIL = @email OR NOME = @nome";
+        var query = "SELECT ID, NOME, EMAIL, TELEFONE, SENHA_HASH FROM usuario WHERE EMAIL = @email OR NOME = @nome";
         using (var command = new NpgsqlCommand(query, connection))
         {
           command.Parameters.AddWithValue("@email", dto.EmailOrUsername);
@@ -145,7 +142,6 @@ public class AuthRepository : IAuthRepository
                   Email = reader.GetString(2),
                   Telefone = reader.GetString(3),
                   SenhaHash = reader.GetString(4),
-                  // Tipo = reader.Get(5)
                 };
 
                 reader.Close();
@@ -168,7 +164,7 @@ public class AuthRepository : IAuthRepository
     }
     catch (Exception e)
     {
-      return Result<string>.Error($"Erro ao Logar usuario: {e.Message}");
+      return Result<string>.Error($"Erro ao aqui Logar usuario: {e.Message}");
     }
   }
 

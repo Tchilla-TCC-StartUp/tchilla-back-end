@@ -22,7 +22,6 @@ public class CadastrarUsuarioUseCase
             Nome = dto.Nome,
             Telefone = dto.Telefone,
             Email = dto.Email,
-            Tipo = dto.Tipo,
             SenhaHash = dto.Senha,
             Foto = "/Resources/images/user.svg"
         };

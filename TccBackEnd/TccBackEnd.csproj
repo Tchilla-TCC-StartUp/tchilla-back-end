@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="UseCases\SubCategoria\Atualizar\" />
     <Folder Include="Utils\" />
   </ItemGroup>
 

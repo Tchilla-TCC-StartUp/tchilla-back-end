@@ -17,6 +17,7 @@ using TccBackEnd.UseCases.Usuario.ObterTodos;
 using TccBackEnd.UseCases.Usuario.ObterPorId;
 using TccBackEnd.UseCases.Auth.ChangePassword;
 using TccBackEnd.UseCases.Cadastrar.Local;
+using TccBackEnd.UseCases.Categoria.Cadastrar;
 using TccBackEnd.UseCases.Endereco.Cadastrar;
 using TccBackEnd.UseCases.Local.Atualizar;
 using TccBackEnd.UseCases.Local.ObterPorId;
@@ -126,6 +127,12 @@ builder.Services.AddScoped<LocalService>();
 builder.Services.AddScoped<CadastrarLocalUseCase>();
 builder.Services.AddScoped<AtualizarLocalUseCase>();
 builder.Services.AddScoped<ObterPorIdLocalUseCase>();
+
+
+builder.Services.AddScoped<ICategoriaRepository>(provider =>
+    new CategoriaRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<CategoriaService>();
+builder.Services.AddScoped<CadastrarCategoriaUseCase>();
 // Add services to the container.
 
 builder.Services.AddControllers();

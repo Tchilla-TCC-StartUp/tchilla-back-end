@@ -38,7 +38,7 @@ public class UsuarioRepository : IUsuarioRepository
         }
         catch (Exception e)
         {
-            return Result<string>.Error($"Erro ao atualizar usuario: {e.Message}");
+            return Result<string>.Error($"Erro ao atualizar usuario");
         }
     }
 
@@ -50,13 +50,12 @@ public class UsuarioRepository : IUsuarioRepository
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var query = "INSERT INTO usuario(nome, email, telefone, tipo, senha_hash, foto) VALUES(@nome, @email, @telefone, @tipo, @senha, @foto)";
+                var query = "INSERT INTO usuario(nome, email, telefone, senha_hash, foto) VALUES(@nome, @email, @telefone, @senha, @foto)";
                 using (var command = new NpgsqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@nome", usuario.Nome);
                     command.Parameters.AddWithValue("@email", usuario.Email);
                     command.Parameters.AddWithValue("@telefone", usuario.Telefone);
-                    command.Parameters.AddWithValue("@tipo", usuario.Tipo);
                     command.Parameters.AddWithValue("@senha", Bcrypt.HashPassword(usuario.SenhaHash));
                     command.Parameters.AddWithValue("@foto", usuario.Foto);
 
@@ -68,7 +67,7 @@ public class UsuarioRepository : IUsuarioRepository
         }
         catch (Exception e)
         {
-            return Result<string>.Error($"Erro ao Cadastrar Usuario: {e.Message}");
+            return Result<string>.Error($"Erro ao Cadastrar Usuario");
         }
     }
 
@@ -105,7 +104,7 @@ public class UsuarioRepository : IUsuarioRepository
         }
         catch (Exception e)
         {
-            return Result<UsuarioOutputDto>.Error($"Erro ao obter usuario: {e.Message}");
+            return Result<UsuarioOutputDto>.Error($"Erro ao obter usuario");
         }
 
         }
@@ -136,19 +135,7 @@ public class UsuarioRepository : IUsuarioRepository
                                 Foto = reader.GetString(4)
                             });
                         }
-                        {
-                            usuariosOutputDtos = new List<UsuarioOutputDto>()
-                            {
-                                new UsuarioOutputDto()
-                                {
-                                    Id = reader.GetInt64(0),
-                                    Nome = reader.GetString(1),
-                                    Email = reader.GetString(2),
-                                    Telefone = reader.GetString(3),
-                                    Foto = reader.GetString(4)
-                                }
-                            };
-                        }
+                        
                     }
                 }
             }
@@ -157,7 +144,7 @@ public class UsuarioRepository : IUsuarioRepository
         }
         catch (Exception e)
         {
-            return Result<List<UsuarioOutputDto>>.Error($"Erro ao obter Agencias de Eventos: {e.Message}");
+            return Result<List<UsuarioOutputDto>>.Error($"Erro ao obter Agencias de Eventos");
         }
     }
 
@@ -196,7 +183,7 @@ public class UsuarioRepository : IUsuarioRepository
         }
         catch (Exception e)
         {
-            return Result<List<UsuarioOutputDto>>.Error($"Erro ao obter Agencias de Eventos: {e.Message}");
+            return Result<List<UsuarioOutputDto>>.Error($"Erro ao obter Agencias de Eventos");
         }
     }
 

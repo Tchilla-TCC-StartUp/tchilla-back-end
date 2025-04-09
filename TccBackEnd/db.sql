@@ -22,8 +22,7 @@ CREATE TABLE endereco (
     estado_provincia_id INT REFERENCES estado_provincia(id) ON DELETE SET NULL,
     cep VARCHAR(20), -- Opcional, dependendo do país
     latitude DECIMAL(10, 6),
-    longitude DECIMAL(10, 6),
-    pais_id INT REFERENCES pais(id) ON DELETE SET NULL
+    longitude DECIMAL(10, 6)
 );
 
 -- 🚀 Tipos de usuário
@@ -36,7 +35,6 @@ CREATE TABLE usuario (
     email VARCHAR(255) UNIQUE NOT NULL,
     senha_hash TEXT NOT NULL,
     telefone VARCHAR(20),
-    tipo usuario_tipo NOT NULL,
     foto TEXT,
     logado BOOLEAN default false,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -77,22 +75,55 @@ CREATE TABLE agencia (
     endereco_id INT REFERENCES endereco(id) ON DELETE SET NULL,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE categoria (
+    id SERIAL PRIMARY KEY,
+    nome varchar(50) not null,
+	descricacao text default ''
+);
+CREATE TYPE categoria_tipo AS ENUM ('Produto', 'Local', 'Servico');
+CREATE TYPE unidade_tipo AS ENUM ('hora', 'quantidade', 'personalizado', 'unidade', 'kg');
+
+
+CREATE TABLE subcategoria (
+    id SERIAL PRIMARY KEY,
+	nome varchar(50) not null,
+	tipo categoria_tipo not null,
+    categoriaid int references categoria(id) ON Delete Cascade
+);
+
+CREATE TABLE servico (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    descricao TEXT,
+	subCategoria_id int references subcategoria(id),
+    preco DECIMAL(10,2) NOT NULL,
+    prestador_id INT REFERENCES prestador(id) ON DELETE SET NULL,
+    agencia_id INT REFERENCES agencia(id) ON DELETE SET NULL,
+    unidade unidade_tipo NOT NULL,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
 
 -- 🚀 Locais para Eventos
-CREATE TABLE local (
+CREATE TABLE localPrestador (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     descricao TEXT,
     capacidade INT NOT NULL,
     preco_hora DECIMAL(10,2) NOT NULL,
     prestador_id INT REFERENCES prestador(id) ON DELETE SET NULL,
-    agencia_id INT REFERENCES agencia(id) ON DELETE SET NULL,
     endereco_id INT REFERENCES endereco(id) ON DELETE SET NULL,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE localPrestadorImagem (
+    id SERIAL PRIMARY KEY,
+    url Text not null,
+	local_id int references localPrestador(id)
+);
+
 
 -- 🚀 Unidade de Serviço/Produto
-CREATE TYPE unidade_tipo AS ENUM ('hora', 'quantidade', 'personalizado', 'unidade', 'kg');
 
 -- 🚀 Serviços
 CREATE TABLE servico (
@@ -230,7 +261,6 @@ ALTER TABLE local ADD COLUMN categoria_id INT REFERENCES categoria_local(id) ON 
 ALTER TABLE servico ADD COLUMN categoria_id INT REFERENCES categoria_servico(id) ON DELETE SET NULL;
 ALTER TABLE produto ADD COLUMN categoria_id INT REFERENCES categoria_produto(id) ON DELETE SET NULL;
 
-// To List Enums in the db
 SELECT n.nspname AS schema, 
        t.typname AS enum_name
 FROM pg_type t 

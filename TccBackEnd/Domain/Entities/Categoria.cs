@@ -1,6 +1,6 @@
 namespace TccBackEnd.Domain.Entities;
 
-public class CategoriaLocal
+public class Categoria
 {
     public int Id { get; set; }
     public string Nome { get; set; }
