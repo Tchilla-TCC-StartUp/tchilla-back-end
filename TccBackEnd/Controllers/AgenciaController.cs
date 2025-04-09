@@ -1,11 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TccBackEnd.Service;
 using TccBackEnd.Shared.Result;
-using TccBackEnd.UseCases.AgenciaEventos.Atualizar;
-using TccBackEnd.UseCases.AgenciaEventos.Cadastrar;
 using TccBackEnd.UseCases.AgenciaEventos.Dtos;
-using TccBackEnd.UseCases.AgenciaEventos.ObterPorId;
-using TccBackEnd.UseCases.AgenciaEventos.ObterTodas;
+using TccBackEnd.UseCases.Auth.Dtos;
 
 namespace TccBackEnd.Controllers;
 
@@ -20,32 +18,43 @@ public class AgenciaController : ControllerBase
         _logger = logger;
         _agenciaEventosService = agenciaEventosService;
     }
-
-    [HttpPost("cadastrar")]
-    public async Task<IActionResult> Cadastrar([FromBody] CadastrarAgenciaEventosDto dto)
+    
+    [Authorize]
+    [HttpGet("getInfoByToken")]
+    public async Task<IActionResult> ObterUsuarioPorToken()
     {
-        Result<string> result = await _agenciaEventosService.Cadastrar.Executar(dto);
-        _logger.LogInformation($"Solicitação de cadastramento de Agencia de eventos");
-        return (result.IsSuccess) ? CreatedAtAction(nameof(Cadastrar), result, null) : BadRequest(new {Error = result.ErrorMessage});
-    }
+        var userIdClaim = User.FindFirst("id");
+        if (userIdClaim == null) 
+            return Unauthorized(new { Error = "Usuário não autenticado" });
 
-    [HttpPut("atualizar")]
-    public async Task<IActionResult> Atualizar([FromBody] AtualizarAgenciaEventosDto dto)
-    {
-        Result<string> result = await _agenciaEventosService.Atualizar.Executar(dto);
-        _logger.LogInformation($"Solicitação de atualização de Agencia de eventos");
-        return (result.IsSuccess) ? CreatedAtAction(nameof(Atualizar), result, null) : BadRequest(new {Error = result.ErrorMessage});
+        var userId = int.Parse(userIdClaim.Value);
+        /*Result<UsuarioOutputDto?> result = await _usuarioService.ObterPorId.Executar(userId);
+        _logger.LogInformation("Solicitação de usuario por token.");
+
+        return result.IsSuccess
+            ? Ok(result)
+            : BadRequest(new { Error = result.ErrorMessage });**/
+        return Ok();
     }
     
-    [HttpGet("obterPorId")]
-    public async Task<IActionResult> ObterPorId([FromQuery] long id)
+    [HttpPut("update")]
+    public async Task<IActionResult> Atualizar([FromBody] AtualizarAgenciaEventosDto dto)
+    {
+        //Result<string> result = await _agenciaEventosService.Atualizar.Executar(dto);
+        _logger.LogInformation($"Solicitação de atualização de Agencia de eventos");
+        //return (result.IsSuccess) ? CreatedAtAction(nameof(Atualizar), result, null) : BadRequest(new {Error = result.ErrorMessage});
+        return Ok();
+    }
+    
+    [HttpGet("get/{id:int}")]
+    public async Task<IActionResult> ObterPorId([FromQuery] int id)
     {
         Result<AgenciaEventosOutputDto?> result = await _agenciaEventosService.ObterPorId.Executar(id);
         _logger.LogInformation($"Solicitação de obtenção de Agencia de eventos");
         return (result.IsSuccess) ? CreatedAtAction(nameof(ObterPorId), result, null) : BadRequest(new {Error = result.ErrorMessage});
     }
     
-    [HttpGet("obterTodos")]
+    [HttpGet("getAll")]
     public async Task<IActionResult> ObterTodos()
     {
         Result<List<AgenciaEventosOutputDto?>> result = await _agenciaEventosService.ObterTodas.Executar();
@@ -53,8 +62,8 @@ public class AgenciaController : ControllerBase
         return (result.IsSuccess) ? CreatedAtAction(nameof(ObterTodos), result, null) : BadRequest(new {Error = result.ErrorMessage});
     }
     
-    [HttpGet("ObterTodasPorPesquisa")]
-    public async Task<IActionResult> ObterTodasPorPesquisa([FromQuery] string consulta)
+    [HttpGet("getAll/{consulta}")]
+    public async Task<IActionResult> ObterTodasPorPesquisa(string consulta)
     {
         Result<List<AgenciaEventosOutputDto>?> result = await _agenciaEventosService.ObterTodasPorPesquisa.Executar(consulta);
         _logger.LogInformation($"Solicitação de obtenção de Agencia de eventos");

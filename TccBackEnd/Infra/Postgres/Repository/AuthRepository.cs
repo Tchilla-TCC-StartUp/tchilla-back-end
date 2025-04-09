@@ -1,9 +1,13 @@
-using System.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 using Npgsql;
 using TccBackEnd.Domain.Entities;
 using TccBackEnd.Domain.Interfaces;
 using TccBackEnd.Shared.Result;
-using TccBackEnd.UseCases.Cliente.Dtos;
+using TccBackEnd.UseCases.Auth.Dtos;
+using Bcrypt = BCrypt.Net.BCrypt;
 
 namespace TccBackEnd.Infra.Postgres.Repository;
 
@@ -14,95 +18,203 @@ public class AuthRepository : IAuthRepository
   {
     _connectionString = connectionString;
   }
-  private string gerarTokenCliente(Cliente cliente)
+  private string gerarTokenUsuario(Usuario usuario)
   {
-    return "";
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Tchilla".PadRight(128)));
+    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+    var token = new JwtSecurityToken(
+      issuer: "Tchilla",
+      audience: "Tchilla",
+      claims: new List<Claim>{
+        new Claim("id", usuario.Id.ToString()),
+        new Claim("nome", usuario.Nome),
+      },
+      expires: DateTime.Now.AddMonths(6),
+      signingCredentials: creds
+    );
+
+    return new JwtSecurityTokenHandler().WriteToken(token);
   }
-  public async Task<Result<string>> CadastrarCliente(Cliente cliente)
+  
+  public async Task<Result<string>> TrocarSenha(int userId, string newPassword)
   {
     try
     {
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "INSERT INTO CLIENTE(NOME, NIF, TELEFONE) VALUES(@nome, @nif, @telefone)";
+        var query = "Update usuario set senha_hash = @novaSenha_hash WHERE id = @id";
+
         using (var command = new NpgsqlCommand(query, connection))
         {
-          command.Parameters.AddWithValue("@nome", cliente.Nome);
-          command.Parameters.AddWithValue("@nif", cliente.Nome);
-          command.Parameters.AddWithValue("@telefone", cliente.Telefone);
+          command.Parameters.AddWithValue("@novaSenha_hash", Bcrypt.HashPassword(newPassword));
+
+          await command.ExecuteNonQueryAsync();
+          
+          await connection.CloseAsync();
+        }
+      }
+      return Result<string>.Success("Sucesso", "Senha alterada com sucesso");
+    }
+    catch (Exception e)
+    {
+      return Result<string>.Error($"Erro ao Trocar Senha de usuário: {e.Message}");
+    }
+  }
+  public async Task<Result<string>> CadastrarUsuario(Usuario usuario)
+  {
+    try
+    {
+      using (var connection = new NpgsqlConnection(_connectionString))
+      {
+        await connection.OpenAsync();
+        var query = "INSERT INTO usuario(NOME, TELEFONE, EMAIL, FOTO, SENHA_HASH) VALUES(@nome, @telefone, @email, @foto, @senha)";
+        using (var command = new NpgsqlCommand(query, connection))
+        {
+          command.Parameters.AddWithValue("@nome", usuario.Nome);
+          command.Parameters.AddWithValue("@telefone", usuario.Telefone);
+          command.Parameters.AddWithValue("@email", usuario.Email);
+          command.Parameters.AddWithValue("@foto", "/Resources/images/user.svg");
+          command.Parameters.AddWithValue("@senha", Bcrypt.HashPassword(usuario.SenhaHash));
           await command.ExecuteNonQueryAsync();
         }
       }
 
-      return Result<string>.Success($"Cadastrada AgenciaEventos com sucesso: {cliente.Nome}");
+      return Result<string>.Success($"Cadastrada usuario com sucesso: {usuario.Nome}");
     }
     catch (Exception e)
     {
-      return Result<string>.Error($"Erro ao Cadastrar AgenciaEventos: {e.Message}");
+      return Result<string>.Error($"Erro ao aqui Cadastrar usuario: {e.Message}");
     }
 
 
   }
-
-  public Task<Result<string>> ForgotPassword()
+  
+  public async Task<Result<string>> CadastrarPrestador(Prestador prestador)
   {
-    throw new NotImplementedException();
-  }
 
-  public async Task<Result<string>> LogarCliente(LogarClienteDto dto)
-  {
-    bool IsAutenticated = false;
     try
     {
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "SELECT ID,PASSWORD FROM CLIENTE WHERE EMAIL = @email or NOME = @nome";
+        var query = "INSERT INTO PRESTADOR(NOME, NIF, TELEFONE) VALUES(@NOME, @NIF, @TELEFONE)";
+        using (var command = new NpgsqlCommand(query, connection))
+        {
+          command.Parameters.AddWithValue("@NOME", prestador.Nome );
+          command.Parameters.AddWithValue("@NIF", prestador.Nif); 
+          await command.ExecuteScalarAsync();
+        }
+      }
+      return Result<string>.Success($"Cadastrada usuario com sucesso: {prestador.Nome}");
+    }catch (Exception e)
+    {
+      return Result<string>.Error($"Erro ao Cadastrar prestador: {e.Message}");
+    }
+    
+    
+  }
+
+
+  public async Task<Result<string>> Logar(LogarCredenciaisDto dto)
+  {
+    try
+    {
+      using (var connection = new NpgsqlConnection(_connectionString))
+      {
+        await connection.OpenAsync();
+        var query = "SELECT ID, NOME, EMAIL, TELEFONE, SENHA_HASH FROM usuario WHERE EMAIL = @email OR NOME = @nome";
         using (var command = new NpgsqlCommand(query, connection))
         {
           command.Parameters.AddWithValue("@email", dto.EmailOrUsername);
           command.Parameters.AddWithValue("@nome", dto.EmailOrUsername);
-
           using (var reader = await command.ExecuteReaderAsync())
           {
             if (await reader.ReadAsync())
             {
-              if(BCrypt.Net.BCrypt.Verify(dto.Password, reader.GetString(1)))
+              if (Bcrypt.Verify(dto.Password, reader.GetString(4)))
               {
-                query = "INSERT INTO CLIENTE(ATIVO) VALUES(TRUE) WHERE ID=@id";
-
-                command.Parameters.AddWithValue("@id", reader.GetInt64(0));
-                await command.ExecuteNonQueryAsync();
-                Cliente cliente = new Cliente()
+                Usuario usuario = new Usuario()
                 {
-
+                  Id = reader.GetInt32(0),
+                  Nome = reader.GetString(1),
+                  Email = reader.GetString(2),
+                  Telefone = reader.GetString(3),
+                  SenhaHash = reader.GetString(4),
                 };
-                
-                return Result<string>.Success(gerarTokenCliente(cliente), "Logado Cliente com sucesso");
-              }
-                
 
+                reader.Close();
+
+                var updateQuery = "UPDATE usuario SET LOGADO=TRUE WHERE ID=@id";
+                using (var updateCommand = new NpgsqlCommand(updateQuery, connection))
+                {
+                  updateCommand.Parameters.AddWithValue("@id", usuario.Id);
+                  await updateCommand.ExecuteNonQueryAsync();
+                }
+
+                return Result<string>.Success(gerarTokenUsuario(usuario), "Logado usuario com sucesso");
+              }
             }
           }
-      
         }
       }
 
-      return Result<string>.Success($"Cadastrada AgenciaEventos com sucesso: {dto.EmailOrUsername}");
+      return Result<string>.Error("Credenciais inválidas.");
     }
     catch (Exception e)
     {
-      return Result<string>.Error($"Erro ao Cadastrar AgenciaEventos: {e.Message}");
+      return Result<string>.Error($"Erro ao aqui Logar usuario: {e.Message}");
     }
   }
 
-  public Task<Result<string>> LogOutCliente()
+
+  public async Task<Result<string>> LogOut(int id)
+  {
+    try
+    {
+      using (var connection = new NpgsqlConnection(_connectionString))
+      {
+        await connection.OpenAsync();
+
+        var selectQuery = "SELECT * FROM usuario WHERE ID = @id";
+        using (var selectCommand = new NpgsqlCommand(selectQuery, connection))
+        {
+          selectCommand.Parameters.AddWithValue("@id", id);
+
+          using (var reader = await selectCommand.ExecuteReaderAsync())
+          {
+            if (!await reader.ReadAsync())
+            {
+              return Result<string>.Error("Usuário não encontrado");
+            }
+          }
+        }
+
+        // Faz o logout
+        var updateQuery = "UPDATE usuario SET logado = FALSE WHERE ID = @id";
+        using (var updateCommand = new NpgsqlCommand(updateQuery, connection))
+        {
+          updateCommand.Parameters.AddWithValue("@id", id);
+          await updateCommand.ExecuteNonQueryAsync();
+        }
+
+        return Result<string>.Success("LogOut do usuário realizado com sucesso");
+      }
+    }
+    catch (Exception e)
+    {
+      return Result<string>.Error($"Erro ao fazer LogOut do usuário: {e.Message}");
+    }
+  }
+
+
+  public Task<Result<string>> ForgotPassword(string email)
   {
     throw new NotImplementedException();
   }
 
-  public Task<Result<string>> VerificarEmail()
+  public Task<Result<string>> VerificarEmail(string token)
   {
     throw new NotImplementedException();
   }

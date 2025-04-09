@@ -1,18 +1,14 @@
-namespace TccBackEnd.Domain.Entities;
+using TccBackEnd.Domain.Enums;
 
 public class Agencia
 {
-    public long Id { get; set; }
-    public string Nome { get; set; }
+    public int Id { get; set; }
+    public string Nome {get;set;}
     public string Nif { get; set; }
-    public string Telefone { get; set; }
-    public string Email { get; set; }
-    public string Avatar  { get; set; }
-    public string descriçao { get; set; }
-    public DateTime DataNascimento { get; set; }
-    public DateTime DataCadastro { get; set; }
-    public DateTime DataAlteracao { get; set; }
-    public DateTime DataExclusao { get; set; }
-    public int GoogleId { get; set; }
-    public int FacebookId { get; set; }
+    public int UsuarioId { get; set; }
+    public string Descricao { get; set; }
+    public string Foto { get; set; }
+    public bool Aprovado { get; set; } = false;
+    public int? EnderecoId { get; set; }
+    public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
 }
