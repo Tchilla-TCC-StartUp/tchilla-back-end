@@ -29,7 +29,7 @@ public class UsuarioRepository : IUsuarioRepository
                     command.Parameters.AddWithValue("@email", usuario.Email);
                     command.Parameters.AddWithValue("@telefone", usuario.Telefone);
                     command.Parameters.AddWithValue("@id", usuario.Id);
-                    
+
                     await command.ExecuteNonQueryAsync();
                 }
             }
@@ -107,8 +107,8 @@ public class UsuarioRepository : IUsuarioRepository
         {
             return Result<UsuarioOutputDto>.Error($"Erro ao obter usuario: {e.Message}");
         }
-        
-    }
+
+        }
 
 
 
@@ -125,7 +125,17 @@ public class UsuarioRepository : IUsuarioRepository
                 {
                     using (var reader = await command.ExecuteReaderAsync())
                     {
-                        while(await reader.ReadAsync())
+                        while (await reader.ReadAsync() && reader.HasRows)
+                        {
+                            usuariosOutputDtos.Add(new UsuarioOutputDto()
+                            {
+                                Id = reader.GetInt64(0),
+                                Nome = reader.GetString(1),
+                                Email = reader.GetString(2),
+                                Telefone = reader.GetString(3),
+                                Foto = reader.GetString(4)
+                            });
+                        }
                         {
                             usuariosOutputDtos = new List<UsuarioOutputDto>()
                             {
@@ -135,14 +145,14 @@ public class UsuarioRepository : IUsuarioRepository
                                     Nome = reader.GetString(1),
                                     Email = reader.GetString(2),
                                     Telefone = reader.GetString(3),
-                                    Foto = reader.GetString(4) 
+                                    Foto = reader.GetString(4)
                                 }
                             };
                         }
                     }
                 }
             }
-            
+
             return Result<List<UsuarioOutputDto>>.Success(usuariosOutputDtos, "Obtidas todas usuarios de Eventos com sucesso");
         }
         catch (Exception e)
@@ -164,7 +174,7 @@ public class UsuarioRepository : IUsuarioRepository
                 {
                     using (var reader = await command.ExecuteReaderAsync())
                     {
-                        while(await reader.ReadAsync())
+                        while (await reader.ReadAsync())
                         {
                             usuariosOutputDtos = new List<UsuarioOutputDto>()
                             {
@@ -181,7 +191,7 @@ public class UsuarioRepository : IUsuarioRepository
                     }
                 }
             }
-            
+
             return Result<List<UsuarioOutputDto>>.Success(usuariosOutputDtos, "Obtidas todas Agencia de Eventos com sucesso");
         }
         catch (Exception e)
@@ -200,5 +210,5 @@ public class UsuarioRepository : IUsuarioRepository
         throw new NotImplementedException();
     }
 
-    
+
 }
