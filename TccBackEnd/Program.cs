@@ -24,6 +24,10 @@ using TccBackEnd.UseCases.Local.ObterPorId;
 using TccBackEnd.UseCases.PrestadorServico.Cadastrar;
 using TccBackEnd.UseCases.Search;
 using TccBackEnd.UseCases.Usuario.Deletar;
+using TccBackEnd.UseCases.Categoria.Remover;
+using TccBackEnd.UseCases.SubCategoria.Cadastrar;
+using TccBackEnd.UseCases.SubCategoria.ObterTodas;
+using TccBackEnd.UseCases.SubCategoria.Remover;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -133,7 +137,17 @@ builder.Services.AddScoped<ICategoriaRepository>(provider =>
     new CategoriaRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<CategoriaService>();
 builder.Services.AddScoped<CadastrarCategoriaUseCase>();
+builder.Services.AddScoped<AtualizarCategoriaUseCase>();
 builder.Services.AddScoped<ObterTodasCategoriaUseCase>();   
+builder.Services.AddScoped<RemoverCategoriaUseCase>();
+
+builder.Services.AddScoped<ISubCategoriaRepository>(provider =>
+    new SubCategoriaRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<SubCategoriaService>();
+builder.Services.AddScoped<CadastrarSubCategoriaUseCase>();
+builder.Services.AddScoped<AtualizarSubCategoriaUseCase>();
+builder.Services.AddScoped<ObterTodasSubCategoriaUseCase>();   
+builder.Services.AddScoped<RemoverSubCategoriaUseCase>();
 // Add services to the container.
 
 builder.Services.AddControllers();

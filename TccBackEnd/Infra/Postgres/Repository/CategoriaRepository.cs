@@ -49,56 +49,56 @@ public class CategoriaRepository : ICategoriaRepository
       using (var connection = new Npgsql.NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync(); 
-        var query = "INSERT INTO categoria (nome, descricao) VALUES (@Nome, @Descricao)";
+        var query = "update categoria set nome=@Nome, descricao=@Descricao where id = @Id";
         
         using (var command = new Npgsql.NpgsqlCommand(query, connection))
         {
+          command.Parameters.AddWithValue("@Id", categoria.Id);
           command.Parameters.AddWithValue("@Nome", categoria.Nome);
           command.Parameters.AddWithValue("@Descricao", categoria.Descricao);
 
           int rowsAffected = await command.ExecuteNonQueryAsync();
           
           if (rowsAffected > 0)
-            return Result<string>.Success("Categoria criada com sucesso");
+            return Result<string>.Success("Categoria atualizado com sucesso");
           else
-            return Result<string>.Error("Erro ao criar categoria");
+            return Result<string>.Error("Erro ao atualizar categoria");
         }
 
       }
     }
     catch (Exception ex)
     {
-      return Result<string>.Error("Erro ao criar categoria: " + ex.Message);
+      return Result<string>.Error("Erro ao atualizar categoria");
     }
   }
 
-  public async Task<Result<string>> RemoverCategoria(Categoria categoria)
+  public async Task<Result<string>> RemoverCategoria(int id)
   {
     try
     {
       using (var connection = new Npgsql.NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync(); 
-        var query = "Remote from INTO categoria (nome, descricao) VALUES (@Nome, @Descricao)";
+        var query = "Delete from categoria where id = @Id";
         
         using (var command = new Npgsql.NpgsqlCommand(query, connection))
         {
-          command.Parameters.AddWithValue("@Nome", categoria.Nome);
-          command.Parameters.AddWithValue("@Descricao", categoria.Descricao);
+          command.Parameters.AddWithValue("@Id", id);
 
           int rowsAffected = await command.ExecuteNonQueryAsync();
           
           if (rowsAffected > 0)
-            return Result<string>.Success("Categoria criada com sucesso");
+            return Result<string>.Success("Categoria removida com sucesso");
           else
-            return Result<string>.Error("Erro ao criar categoria");
+            return Result<string>.Error("Erro ao removida categoria");
         }
 
       }
     }
     catch (Exception ex)
     {
-      return Result<string>.Error("Erro ao criar categoria: " + ex.Message);
+      return Result<string>.Error("Erro ao removida categoria");
     }
   }
 
@@ -110,7 +110,7 @@ public class CategoriaRepository : ICategoriaRepository
       using (var connection = new Npgsql.NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync(); 
-        var query = "INSERT INTO categoria (nome, descricao) VALUES (@Nome, @Descricao)";
+        var query = "select * from categoria";
         
         using (var command = new Npgsql.NpgsqlCommand(query, connection))
         {
@@ -121,12 +121,13 @@ public class CategoriaRepository : ICategoriaRepository
               categorias.Add(
                 new CategoriaOutPutDto
                 {
-                  Nome = reader.GetString(0),
-                  Descricao = reader.GetString(1)
+                  Id = reader.GetInt32(0),
+                  Nome = reader.GetString(1),
+                  Descricao = reader.GetString(2)
                 }
               );
             }
-            return Result<List<CategoriaOutPutDto>>.Success("Categorias obtidas com sucesso");
+            return Result<List<CategoriaOutPutDto>>.Success(categorias, "Categorias obtidas com sucesso");
           }
           
         }

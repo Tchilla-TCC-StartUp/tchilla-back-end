@@ -1,33 +1,145 @@
 using TccBackEnd.Domain.Entities;
 using TccBackEnd.Domain.Interfaces;
 using TccBackEnd.Shared.Result;
+using TccBackEnd.UseCases.Categoria.Dtos;
+using Npgsql;
+using TccBackEnd.UseCases.SubCategoria.Dtos;
+using TccBackEnd.Domain.Enums;
 
 namespace TccBackEnd.Infra.Postgres.Repository;
 
 public class SubCategoriaRepository : ISubCategoriaRepository
 {
     private readonly string _connectionString;
+    
     public SubCategoriaRepository(string connectionString)
     {
         _connectionString = connectionString;
     }
-    public Task<Result<string>> CriarSubCategoria(SubCategoria categoria)
+
+    public async Task<Result<string>> CriarSubCategoria(SubCategoria subCategoria)
     {
-        throw new NotImplementedException();
+        try
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync(); 
+                var query = "INSERT INTO subcategoria (nome, tipo, categoriaid) VALUES (@Nome, @Tipo, @CategoriaId)";
+                
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Nome", subCategoria.Nome);
+                    //command.Parameters.AddWithValue("@Tipo", subCategoria.Tipo.ToString());
+                    command.Parameters.AddWithValue("@CategoriaId", subCategoria.CategoriaId);
+
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+                    
+                    if (rowsAffected > 0)
+                        return Result<string>.Success("Subcategoria criada com sucesso");
+                    else
+                        return Result<string>.Error("Erro ao criar subcategoria");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            return Result<string>.Error("Erro ao criar subcategoria: " + ex.Message);
+        }
     }
 
-    public Task<Result<string>> AtualizarSubCategoria(SubCategoria categoria)
+    public async Task<Result<string>> AtualizarSubCategoria(SubCategoria subCategoria)
     {
-        throw new NotImplementedException();
+        try
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync(); 
+                var query = "UPDATE subcategoria SET nome = @Nome, tipo = @Tipo, categoriaid = @CategoriaId WHERE id = @Id";
+                
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", subCategoria.Id);
+                    command.Parameters.AddWithValue("@Nome", subCategoria.Nome);
+                    command.Parameters.AddWithValue("@Tipo", subCategoria.Tipo.ToString());
+                    command.Parameters.AddWithValue("@CategoriaId", subCategoria.CategoriaId);
+
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+                    
+                    if (rowsAffected > 0)
+                        return Result<string>.Success("Subcategoria atualizada com sucesso");
+                    else
+                        return Result<string>.Error("Subcategoria não encontrada");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            return Result<string>.Error("Erro ao atualizar subcategoria: " + ex.Message);
+        }
     }
 
-    public Task<Result<string>> RemoverSubCategoria(SubCategoria categoria)
+    public async Task<Result<string>> RemoverSubCategoria(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync(); 
+                var query = "DELETE FROM subcategoria WHERE id = @Id";
+                
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+                    
+                    if (rowsAffected > 0)
+                        return Result<string>.Success("Subcategoria removida com sucesso");
+                    else
+                        return Result<string>.Error("Subcategoria não encontrada");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            return Result<string>.Error("Erro ao remover subcategoria: " + ex.Message);
+        }
     }
 
-    public Task<Result<string>> ObterTodasSubCategorias(SubCategoria categoria)
+    public async Task<Result<List<SubCategoriaOutPutDto>>> ObterTodasSubCategorias()
     {
-        throw new NotImplementedException();
+        List<SubCategoriaOutPutDto> subCategorias = new List<SubCategoriaOutPutDto>();
+        
+        try
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync(); 
+                var query = "SELECT id, nome, tipo, categoriaid FROM subcategoria";
+                
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            subCategorias.Add(
+                                new SubCategoriaOutPutDto
+                                {
+                                    Id = reader.GetInt32(0),
+                                    Nome = reader.GetString(1),
+                                    CategoriaId = reader.GetInt32(3)
+                                }
+                            );
+                        }
+                        return Result<List<SubCategoriaOutPutDto>>.Success(subCategorias, "Subcategorias obtidas com sucesso");
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            return Result<List<SubCategoriaOutPutDto>>.Error($"Erro ao carregar subcategorias: {ex.Message}");
+        }
     }
 }
