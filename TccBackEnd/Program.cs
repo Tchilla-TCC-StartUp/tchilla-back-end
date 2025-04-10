@@ -24,6 +24,7 @@ using TccBackEnd.UseCases.Local.ObterPorId;
 using TccBackEnd.UseCases.PrestadorServico.Cadastrar;
 using TccBackEnd.UseCases.Search;
 using TccBackEnd.UseCases.Usuario.Deletar;
+using TccBackEnd.UseCases.Categoria.Remover;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -134,6 +135,7 @@ builder.Services.AddScoped<ICategoriaRepository>(provider =>
 builder.Services.AddScoped<CategoriaService>();
 builder.Services.AddScoped<CadastrarCategoriaUseCase>();
 builder.Services.AddScoped<ObterTodasCategoriaUseCase>();   
+builder.Services.AddScoped<RemoverCategoriaUseCase>();
 // Add services to the container.
 
 builder.Services.AddControllers();
