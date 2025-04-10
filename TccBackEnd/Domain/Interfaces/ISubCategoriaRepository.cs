@@ -10,4 +10,5 @@ public interface ISubCategoriaRepository
     Task<Result<string>> AtualizarSubCategoria(SubCategoria categoria);
     Task<Result<string>> RemoverSubCategoria(int id);
     Task<Result<List<SubCategoriaOutPutDto>>> ObterTodasSubCategorias();
+    Task<Result<List<SubCategoriaOutPutDto>>> ObterTodasSubCategoriasPorCategoria(int categoriaId);
 }

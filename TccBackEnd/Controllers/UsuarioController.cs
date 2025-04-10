@@ -94,7 +94,7 @@ public class UsuarioController : Controller
         _logger.LogInformation($"Solicitação de exclusão do usuário com ID {id}.");
         
         return result.IsSuccess 
-            ? Ok(new { Mensagem = "Usuário deletado com sucesso." }) 
+            ? Ok(result) 
             : BadRequest(new { Error = result.ErrorMessage });
     }
 }

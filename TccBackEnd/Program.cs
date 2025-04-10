@@ -148,6 +148,7 @@ builder.Services.AddScoped<CadastrarSubCategoriaUseCase>();
 builder.Services.AddScoped<AtualizarSubCategoriaUseCase>();
 builder.Services.AddScoped<ObterTodasSubCategoriaUseCase>();   
 builder.Services.AddScoped<RemoverSubCategoriaUseCase>();
+builder.Services.AddScoped<ObterTodasPorCategoriaUseCase>();
 // Add services to the container.
 
 builder.Services.AddControllers();
