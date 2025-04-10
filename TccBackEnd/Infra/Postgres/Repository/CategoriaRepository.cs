@@ -49,10 +49,11 @@ public class CategoriaRepository : ICategoriaRepository
       using (var connection = new Npgsql.NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync(); 
-        var query = "update categoria  set nome = @Nome & descricao = @Descricao)";
+        var query = "update categoria set nome=@Nome, descricao=@Descricao where id = @Id";
         
         using (var command = new Npgsql.NpgsqlCommand(query, connection))
         {
+          command.Parameters.AddWithValue("@Id", categoria.Id);
           command.Parameters.AddWithValue("@Nome", categoria.Nome);
           command.Parameters.AddWithValue("@Descricao", categoria.Descricao);
 
@@ -109,7 +110,7 @@ public class CategoriaRepository : ICategoriaRepository
       using (var connection = new Npgsql.NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync(); 
-        var query = "INSERT INTO categoria (nome, descricao) VALUES (@Nome, @Descricao)";
+        var query = "select * from categoria";
         
         using (var command = new Npgsql.NpgsqlCommand(query, connection))
         {
@@ -126,7 +127,7 @@ public class CategoriaRepository : ICategoriaRepository
                 }
               );
             }
-            return Result<List<CategoriaOutPutDto>>.Success("Categorias obtidas com sucesso");
+            return Result<List<CategoriaOutPutDto>>.Success(categorias, "Categorias obtidas com sucesso");
           }
           
         }

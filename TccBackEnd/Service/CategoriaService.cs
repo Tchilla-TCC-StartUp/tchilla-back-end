@@ -8,11 +8,13 @@ public class CategoriaService
   public CadastrarCategoriaUseCase Cadastrar {get;}
   public ObterTodasCategoriaUseCase ObterTodas {get;}
   public RemoverCategoriaUseCase Remover {get;}
-  public CategoriaService(CadastrarCategoriaUseCase cadastrar, ObterTodasCategoriaUseCase obterTodas, RemoverCategoriaUseCase remover)
+  public AtualizarCategoriaUseCase Atualizar {get;}
+  public CategoriaService(CadastrarCategoriaUseCase cadastrar, ObterTodasCategoriaUseCase obterTodas, RemoverCategoriaUseCase remover, AtualizarCategoriaUseCase atualizar)
   {
     Cadastrar = cadastrar; 
     ObterTodas = obterTodas;
     Remover = remover;
+    Atualizar = atualizar;
   }
 
 }

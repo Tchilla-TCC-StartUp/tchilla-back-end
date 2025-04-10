@@ -41,8 +41,8 @@ public class CategoriaController : ControllerBase
         if (userId == null)
             return Unauthorized(new { Error = "Usuário não autenticado" });
 
-    var result = await _categoriaService.Cadastrar.Executar(dto);
-    _logger.LogInformation("Solicitação de cadastro de categoria");
+    var result = await _categoriaService.Atualizar.Executar(id, dto);
+    _logger.LogInformation("Solicitação de atualização de categoria");
     return result.IsSuccess
         ? Ok(result)
         : BadRequest(new { Error = result.ErrorMessage });
