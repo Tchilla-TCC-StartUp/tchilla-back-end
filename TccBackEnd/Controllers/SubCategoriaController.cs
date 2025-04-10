@@ -28,7 +28,7 @@ public class SubCategoriaController : ControllerBase
             return Unauthorized(new { Error = "Usuário não autenticado" });
 
     var result = await _subCategoriaService.Cadastrar.Executar(dto);
-    _logger.LogInformation("Solicitação de cadastro de categoria");
+    _logger.LogInformation("Solicitação de cadastro de SubCategoria");
     return result.IsSuccess
         ? Ok(result)
         : BadRequest(new { Error = result.ErrorMessage });
@@ -43,7 +43,7 @@ public class SubCategoriaController : ControllerBase
             return Unauthorized(new { Error = "Usuário não autenticado" });
 
     var result = await _subCategoriaService.Cadastrar.Executar(dto);
-    _logger.LogInformation("Solicitação de cadastro de categoria");
+    _logger.LogInformation("Solicitação de atualização de SubCategoria");
     return result.IsSuccess
         ? Ok(result)
         : BadRequest(new { Error = result.ErrorMessage });
@@ -51,14 +51,14 @@ public class SubCategoriaController : ControllerBase
 
   [Authorize]
   [HttpDelete("Delete")]
-  public async Task<IActionResult> RemoverCategoria( int id, CadastrarSubCategoriaDto dto)
+  public async Task<IActionResult> RemoverCategoria([FromBody] int id)
   {
     var userId = User.FindFirstValue("id");
         if (userId == null)
             return Unauthorized(new { Error = "Usuário não autenticado" });
 
-    var result = await _subCategoriaService.Cadastrar.Executar(dto);
-    _logger.LogInformation("Solicitação de cadastro de categoria");
+    var result = await _subCategoriaService.Remover.Executar(id);
+    _logger.LogInformation("Solicitação de remoção de SubCategoria");
     return result.IsSuccess
         ? Ok(result)
         : BadRequest(new { Error = result.ErrorMessage });
@@ -66,14 +66,14 @@ public class SubCategoriaController : ControllerBase
 
   [Authorize]
   [HttpGet("getAll")]
-  public async Task<IActionResult> ObterTodas([FromBody] CadastrarSubCategoriaDto dto)
+  public async Task<IActionResult> ObterTodas()
   {
     var userId = User.FindFirstValue("id");
         if (userId == null)
             return Unauthorized(new { Error = "Usuário não autenticado" });
 
-    var result = await _subCategoriaService.Cadastrar.Executar(dto);
-    _logger.LogInformation("Solicitação de cadastro de categoria");
+    var result = await _subCategoriaService.ObterTodas.Executar();
+    _logger.LogInformation("Solicitação de cadastro de SubCategoria");
     return result.IsSuccess
         ? Ok(result)
         : BadRequest(new { Error = result.ErrorMessage });
