@@ -42,7 +42,7 @@ public class SubCategoriaController : ControllerBase
         if (userId == null)
             return Unauthorized(new { Error = "Usuário não autenticado" });
 
-    var result = await _subCategoriaService.Cadastrar.Executar(dto);
+    var result = await _subCategoriaService.Atualizar.Executar(id, dto);
     _logger.LogInformation("Solicitação de atualização de SubCategoria");
     return result.IsSuccess
         ? Ok(result)
@@ -51,7 +51,7 @@ public class SubCategoriaController : ControllerBase
 
   [Authorize]
   [HttpDelete("Delete")]
-  public async Task<IActionResult> RemoverCategoria([FromBody] int id)
+  public async Task<IActionResult> RemoverCategoria(int id)
   {
     var userId = User.FindFirstValue("id");
         if (userId == null)
@@ -73,6 +73,21 @@ public class SubCategoriaController : ControllerBase
             return Unauthorized(new { Error = "Usuário não autenticado" });
 
     var result = await _subCategoriaService.ObterTodas.Executar();
+    _logger.LogInformation("Solicitação de cadastro de SubCategoria");
+    return result.IsSuccess
+        ? Ok(result)
+        : BadRequest(new { Error = result.ErrorMessage });
+  }
+
+  [Authorize]
+  [HttpGet("getAll/{categoriaId}")]
+  public async Task<IActionResult> ObterTodas(int categoriaId)
+  {
+    var userId = User.FindFirstValue("id");
+        if (userId == null)
+            return Unauthorized(new { Error = "Usuário não autenticado" });
+
+    var result = await _subCategoriaService.ObterTodasPorCategoria.Executar(categoriaId);
     _logger.LogInformation("Solicitação de cadastro de SubCategoria");
     return result.IsSuccess
         ? Ok(result)

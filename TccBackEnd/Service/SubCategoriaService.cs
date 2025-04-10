@@ -11,16 +11,19 @@ public class SubCategoriaService
     public ObterTodasSubCategoriaUseCase ObterTodas {get;}
     public RemoverSubCategoriaUseCase Remover {get;}
     public AtualizarSubCategoriaUseCase Atualizar {get;}
+    public ObterTodasPorCategoriaUseCase ObterTodasPorCategoria {get;}
     public SubCategoriaService(
         CadastrarSubCategoriaUseCase cadastrar,
         ObterTodasSubCategoriaUseCase obterTodas,
         RemoverSubCategoriaUseCase remover,
-        AtualizarSubCategoriaUseCase atualizar
+        AtualizarSubCategoriaUseCase atualizar,
+        ObterTodasPorCategoriaUseCase obterTodasPorCategoria
     )
     {
         Cadastrar = cadastrar;  
         ObterTodas = obterTodas;
         Remover = remover;
         Atualizar = atualizar;
+        ObterTodasPorCategoria = obterTodasPorCategoria;
     }
 }
