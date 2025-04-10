@@ -192,9 +192,38 @@ public class UsuarioRepository : IUsuarioRepository
         throw new NotImplementedException();
     }
 
-    public Task<Result<string>> DeletarUsuario(int idUsuario)
+    public async Task<Result<string>> DeletarUsuario(int idUsuario)
     {
-        throw new NotImplementedException();
+        try
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var query = "Delete from usuario where id = @id";
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", idUsuario);
+
+                    var rowsAffected = await  command.ExecuteNonQueryAsync();
+
+                    if(rowsAffected == null)
+                    {
+                        return Result<string>.Error($"Usuario não encontrado");
+                    }
+                    if (rowsAffected > 0)
+                        return Result<string>.Success($"Removido usuario com sucesso");
+                    else    
+                        return Result<string>.Error($"Erro ao remover usuario");
+
+                }
+            }
+
+           
+        }
+        catch (Exception e)
+        {
+            return Result<string>.Error($"Erro ao Cadastrar Usuario");
+        }
     }
 
 
