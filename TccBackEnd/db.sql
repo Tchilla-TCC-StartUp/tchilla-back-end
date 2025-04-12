@@ -91,19 +91,50 @@ CREATE TABLE subcategoria (
     categoriaid int references categoria(id) ON Delete Cascade
 );
 
-CREATE TABLE servico (
+CREATE TABLE servicoprestador (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     descricao TEXT,
 	subCategoria_id int references subcategoria(id),
     preco DECIMAL(10,2) NOT NULL,
     prestador_id INT REFERENCES prestador(id) ON DELETE SET NULL,
-    agencia_id INT REFERENCES agencia(id) ON DELETE SET NULL,
     unidade unidade_tipo NOT NULL,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE servicoprestadorMidia (
+    id SERIAL PRIMARY KEY,
+    url Text not null,  
+    servico_id int references servicoprestador(id)
+);
 
+
+CREATE TABLE servicoagencia (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    descricao TEXT,
+	subCategoria_id int references subcategoria(id),
+    preco DECIMAL(10,2) NOT NULL,
+    prestador_id INT REFERENCES prestador(id) ON DELETE SET NULL,
+    unidade unidade_tipo NOT NULL,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE servicoagenciaMidia (
+    id SERIAL PRIMARY KEY,
+    url Text not null,  
+    servico_id int references servicoagencia(id)
+);
+CREATE TABLE produtoagencia (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    descricao TEXT,
+    subCategoria_id int references subcategoria(id),
+    preco DECIMAL(10,2) NOT NULL,
+    prestador_id INT REFERENCES prestador(id) ON DELETE SET NULL,
+    unidade unidade_tipo NOT NULL,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- 🚀 Locais para Eventos
 CREATE TABLE localPrestador (
