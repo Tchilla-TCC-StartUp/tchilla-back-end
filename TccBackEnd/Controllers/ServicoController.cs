@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TccBackEnd.Service;
 using TccBackEnd.UseCases.Categoria.Dtos;
+using TccBackEnd.UseCases.Servico.Cadastrar;
+using TccBackEnd.UseCases.Servico.Dtos;
 
 namespace TccBackEnd.Controllers;
 
@@ -11,23 +13,24 @@ namespace TccBackEnd.Controllers;
 public class ServiceController : ControllerBase
 {
   private readonly ILogger<ServiceController> _logger;
-  private readonly CategoriaService _categoriaService;
-  public ServiceController(ILogger<ServiceController> logger, CategoriaService categoriaService)
+  private readonly ServicoService _servicoService;
+  public ServiceController(ILogger<ServiceController> logger, ServicoService servicoService)
   {
     _logger = logger;
-    _categoriaService = categoriaService;
+    _servicoService = servicoService;
   }
 
   [Authorize]
   [HttpPost("create")]
-  public async Task<IActionResult> CriarServico([FromBody] CategoriaDto dto)
+  public async Task<IActionResult> CriarServico([FromBody] CadastrarServicoDto dto)
   {
     var userId = User.FindFirstValue("id");
         if (userId == null)
             return Unauthorized(new { Error = "Usuário não autenticado" });
-
-    var result = await _categoriaService.Cadastrar.Executar(dto);
-    _logger.LogInformation("Solicitação de cadastro de categoria");
+    var prestador = User.FindFirstValue("prestador");
+    var agencia = User.FindFirstValue("agencia");
+    var result = await _servicoService.Cadastrar.Executar((prestador!=null ? prestador : agencia), dto);
+    _logger.LogInformation("Solicitação de cadastro de Serviço");
     return result.IsSuccess
         ? Ok(result)
         : BadRequest(new { Error = result.ErrorMessage });
@@ -35,13 +38,13 @@ public class ServiceController : ControllerBase
 
   [Authorize]
   [HttpPut("update")]
-  public async Task<IActionResult> AtualizarCategoria(int id, CategoriaDto dto)
+  public async Task<IActionResult> AtualizarCategoria(int id, ServicoDto dto)
   {
     var userId = User.FindFirstValue("id");
         if (userId == null)
             return Unauthorized(new { Error = "Usuário não autenticado" });
 
-    var result = await _categoriaService.Atualizar.Executar(id, dto);
+    var result = await _servicoService.Atualizar.Executar(id, dto);
     _logger.LogInformation("Solicitação de atualização de categoria");
     return result.IsSuccess
         ? Ok(result)
@@ -56,7 +59,7 @@ public class ServiceController : ControllerBase
         if (userId == null)
             return Unauthorized(new { Error = "Usuário não autenticado" });
 
-    var result = await _categoriaService.Remover.Executar(id);
+    var result = await _servicoService.Remover.Executar(id);
     _logger.LogInformation("Solicitação de cadastro de categoria");
     return result.IsSuccess
         ? Ok(result)
@@ -71,7 +74,7 @@ public class ServiceController : ControllerBase
         if (userId == null)
             return Unauthorized(new { Error = "Usuário não autenticado" });
 
-    var result = await _categoriaService.ObterTodas.Executar();
+    var result = await _servicoService.ObterTodas.Executar();
     _logger.LogInformation("Solicitação de todas categorias");
     return result.IsSuccess
         ? Ok(result)
