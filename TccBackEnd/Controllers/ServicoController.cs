@@ -27,8 +27,11 @@ public class ServiceController : ControllerBase
     var userId = User.FindFirstValue("id");
         if (userId == null)
             return Unauthorized(new { Error = "Usuário não autenticado" });
+    
+    dto.OwnerId = int.Parse(userId);
     var prestador = User.FindFirstValue("prestador");
     var agencia = User.FindFirstValue("agencia");
+
     var result = await _servicoService.Cadastrar.Executar((prestador!=null ? prestador : agencia), dto);
     _logger.LogInformation("Solicitação de cadastro de Serviço");
     return result.IsSuccess

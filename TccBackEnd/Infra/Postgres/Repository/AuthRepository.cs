@@ -69,7 +69,7 @@ public class AuthRepository : IAuthRepository
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "INSERT INTO usuario(NOME, TELEFONE, EMAIL, FOTO, SENHA_HASH) VALUES(@nome, @telefone, @email, @foto, @senha)";
+        var query = "INSERT INTO usuario(NOME, TELEFONE, EMAIL, FOTO, SENHA_HASH) VALUES(@nome, @telefone, @email, @foto, @senha) returning id";
         using (var command = new NpgsqlCommand(query, connection))
         {
           command.Parameters.AddWithValue("@nome", usuario.Nome);
@@ -77,18 +77,23 @@ public class AuthRepository : IAuthRepository
           command.Parameters.AddWithValue("@email", usuario.Email);
           command.Parameters.AddWithValue("@foto", "/Resources/images/user.svg");
           command.Parameters.AddWithValue("@senha", Bcrypt.HashPassword(usuario.SenhaHash));
-          await command.ExecuteNonQueryAsync();
+          using(var reader = await command.ExecuteReaderAsync())
+          {
+            if(await reader.ReadAsync())
+            {
+              return Result<string>.Success(reader.GetString(0),$"Cadastrada usuario com sucesso: {usuario.Nome}");
+            }
+          }
+          
         }
       }
-
-      return Result<string>.Success($"Cadastrada usuario com sucesso: {usuario.Nome}");
+      
+      return Result<string>.Error($"Erro ao aqui Cadastrar usuari");
     }
     catch (Exception e)
     {
       return Result<string>.Error($"Erro ao aqui Cadastrar usuario: {e.Message}");
     }
-
-
   }
   
   public async Task<Result<string>> CadastrarPrestador(Prestador prestador)
