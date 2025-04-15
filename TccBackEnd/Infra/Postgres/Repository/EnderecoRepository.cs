@@ -55,8 +55,6 @@ public class EnderecoRepository : IEnderecoRepository
     {
         try
         {
-            if(pais is null)
-                throw new ArgumentNullException(nameof(pais));
 
             using (var connection = new NpgsqlConnection(_connectionString))
             {

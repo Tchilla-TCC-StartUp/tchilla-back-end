@@ -15,11 +15,7 @@ public class CadastrarPaisUseCase
 
     public async Task<Result<string>> Executar(CadastrarPaisDto dto)
     {
-        if (dto is null)
-        {
-            throw new ArgumentNullException(nameof(dto));
-        }
-
+        Console.WriteLine($"Nome: {dto.Nome}");
         var novoPais = new Domain.Entities.Pais()
         {
             Nome = dto.Nome,

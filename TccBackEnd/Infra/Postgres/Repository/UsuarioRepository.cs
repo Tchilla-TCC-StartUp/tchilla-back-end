@@ -50,7 +50,7 @@ public class UsuarioRepository : IUsuarioRepository
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var query = "INSERT INTO usuario(nome, email, telefone, senha_hash, foto) VALUES(@nome, @email, @telefone, @senha, @foto)";
+                var query = "INSERT INTO usuario(nome, email, telefone, senha_hash, foto, tipo) VALUES(@nome, @email, @telefone, @senha, @foto, @tipo)";
                 using (var command = new NpgsqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@nome", usuario.Nome);
@@ -58,8 +58,14 @@ public class UsuarioRepository : IUsuarioRepository
                     command.Parameters.AddWithValue("@telefone", usuario.Telefone);
                     command.Parameters.AddWithValue("@senha", Bcrypt.HashPassword(usuario.SenhaHash));
                     command.Parameters.AddWithValue("@foto", usuario.Foto);
-
-                    await command.ExecuteNonQueryAsync();
+                    command.Parameters.AddWithValue("@tipo", usuario.Tipo.ToString());
+                    using(var reader = await command.ExecuteReaderAsync())
+          {
+            if(await reader.ReadAsync())
+            {
+              return Result<string>.Success(reader.GetString(0),$"Cadastrada um,suario com sucesso: {usuario.Nome}");
+            }
+          }
                 }
             }
 
@@ -67,7 +73,7 @@ public class UsuarioRepository : IUsuarioRepository
         }
         catch (Exception e)
         {
-            return Result<string>.Error($"Erro ao Cadastrar Usuario");
+            return Result<string>.Error($"Erro ao Cadastrar Usuario" + e.ToString());
         }
     }
 

@@ -28,6 +28,9 @@ using TccBackEnd.UseCases.Categoria.Remover;
 using TccBackEnd.UseCases.SubCategoria.Cadastrar;
 using TccBackEnd.UseCases.SubCategoria.ObterTodas;
 using TccBackEnd.UseCases.SubCategoria.Remover;
+using TccBackEnd.UseCases.Servico.ObterTodos;
+using TccBackEnd.UseCases.Servico.Cadastrar;
+using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -149,6 +152,15 @@ builder.Services.AddScoped<AtualizarSubCategoriaUseCase>();
 builder.Services.AddScoped<ObterTodasSubCategoriaUseCase>();   
 builder.Services.AddScoped<RemoverSubCategoriaUseCase>();
 builder.Services.AddScoped<ObterTodasPorCategoriaUseCase>();
+
+builder.Services.AddScoped<IServicoRepository>(provider =>
+    new ServicoRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<ServicoService>();
+builder.Services.AddScoped<CadastrarServicoUseCase>();
+builder.Services.AddScoped<AtualizarServicoUseCase>();
+builder.Services.AddScoped<ObterTodosServicoUseCase>();
+builder.Services.AddScoped<RemoverServicoUseCase>();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -172,7 +184,17 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions {
+    ServeUnknownFileTypes = true,
+    DefaultContentType = "application/octet-stream",
+    ContentTypeProvider = new FileExtensionContentTypeProvider
+    {
+        Mappings =
+        {
+            [".mp4"] = "video/mp4"
+        }
+    }
+});
 app.MapControllers();
 
 app.Run();
