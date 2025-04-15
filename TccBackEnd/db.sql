@@ -2,7 +2,7 @@
 CREATE TABLE pais (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL UNIQUE,
-    codigo_iso VARCHAR(3) NOT NULL UNIQUE -- Exemplo: "AO" para Angola, "BR" para Brasil
+    codigo_iso VARCHAR(3) NOT NULL UNIQUE 
 );
 
 -- 📍 Estados ou Províncias
@@ -10,7 +10,7 @@ CREATE TABLE estado_provincia (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     pais_id INT REFERENCES pais(id) ON DELETE CASCADE,
-    UNIQUE (nome, pais_id) -- Garante que o mesmo estado não seja cadastrado duas vezes no mesmo país
+    UNIQUE (nome, pais_id)
 );
 
 -- 📍 Endereços
@@ -20,13 +20,10 @@ CREATE TABLE endereco (
     rua VARCHAR(255) NOT NULL,
     cidade VARCHAR(100) NOT NULL,
     estado_provincia_id INT REFERENCES estado_provincia(id) ON DELETE SET NULL,
-    cep VARCHAR(20), -- Opcional, dependendo do país
+    cep VARCHAR(20), 
     latitude DECIMAL(10, 6),
     longitude DECIMAL(10, 6)
 );
-
--- 🚀 Tipos de usuário
-CREATE TYPE usuario_tipo AS ENUM ('cliente', 'prestador', 'agencia', 'admin');
 
 -- 🚀 Usuários
 CREATE TABLE usuario (
@@ -36,6 +33,7 @@ CREATE TABLE usuario (
     senha_hash TEXT NOT NULL,
     telefone VARCHAR(20),
     foto TEXT,
+	tipo varchar(20) not null,
     logado BOOLEAN default false,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -48,8 +46,6 @@ CREATE TABLE usuario_endereco (
     UNIQUE (usuario_id, endereco_id)
 );
 
--- 🚀 Tipos de prestador
-CREATE TYPE prestador_tipo AS ENUM ('individual', 'empresa');
 
 -- 🚀 Prestadores
 CREATE TABLE prestador (
@@ -57,7 +53,7 @@ CREATE TABLE prestador (
     nif VARCHAR(15) NOT NULL,
     usuario_id INT REFERENCES usuario(id) ON DELETE CASCADE,
     descricao TEXT,
-    tipo prestador_tipo NOT NULL,
+    tipo varchar(20) NOT NULL,
     foto TEXT,
     aprovado BOOLEAN DEFAULT FALSE,
     endereco_id INT REFERENCES endereco(id) ON DELETE SET NULL,
@@ -78,32 +74,65 @@ CREATE TABLE agencia (
 CREATE TABLE categoria (
     id SERIAL PRIMARY KEY,
     nome varchar(50) not null,
-	descricacao text default ''
+	descricacao text default '',
+	foto text
 );
-CREATE TYPE categoria_tipo AS ENUM ('Produto', 'Local', 'Servico');
-CREATE TYPE unidade_tipo AS ENUM ('hora', 'quantidade', 'personalizado', 'unidade', 'kg');
-
 
 CREATE TABLE subcategoria (
     id SERIAL PRIMARY KEY,
 	nome varchar(50) not null,
-	tipo categoria_tipo not null,
-    categoriaid int references categoria(id) ON Delete Cascade
+	tipo varchar(30) not null,
+    categoriaid int references categoria(id) ON Delete Cascade,
+	foto text
 );
 
-CREATE TABLE servico (
+CREATE TABLE servicoprestador (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     descricao TEXT,
 	subCategoria_id int references subcategoria(id),
     preco DECIMAL(10,2) NOT NULL,
     prestador_id INT REFERENCES prestador(id) ON DELETE SET NULL,
-    agencia_id INT REFERENCES agencia(id) ON DELETE SET NULL,
-    unidade unidade_tipo NOT NULL,
+    unidade varchar(30) NOT NULL,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE servicoprestadorMidia (
+    id SERIAL PRIMARY KEY,
+    url Text not null,  
+    servico_id int references servicoprestador(id),
+	Tipo varchar(20) not null
+);
 
+
+CREATE TABLE servicoagencia (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    descricao TEXT,
+	subCategoria_id int references subcategoria(id),
+    preco DECIMAL(10,2) NOT NULL,
+    prestador_id INT REFERENCES prestador(id) ON DELETE SET NULL,
+    unidade varchar(30) NOT NULL,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE servicoagenciaMidia (
+    id SERIAL PRIMARY KEY,
+    url Text not null,  
+    servico_id int references servicoagencia(id),
+	Tipo varchar(20) not null
+
+);
+CREATE TABLE produtoagencia (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    descricao TEXT,
+    subCategoria_id int references subcategoria(id),
+    preco DECIMAL(10,2) NOT NULL,
+    prestador_id INT REFERENCES prestador(id) ON DELETE SET NULL,
+    unidade varchar(30) NOT NULL,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- 🚀 Locais para Eventos
 CREATE TABLE localPrestador (
@@ -122,8 +151,6 @@ CREATE TABLE localPrestadorImagem (
 	local_id int references localPrestador(id)
 );
 
-
--- 🚀 Unidade de Serviço/Produto
 
 -- 🚀 Serviços
 CREATE TABLE servico (
@@ -151,8 +178,6 @@ CREATE TABLE produto (
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 🚀 Status de Combo
-CREATE TYPE combo_status AS ENUM ('ativo', 'pendente_aprovacao', 'inativo');
 
 -- 🚀 Combos
 CREATE TABLE combo (
@@ -183,8 +208,6 @@ CREATE TABLE combo_produto (
     quantidade INT NOT NULL DEFAULT 1
 );
 
--- 🚀 Status de Agendamento
-CREATE TYPE agendamento_status AS ENUM ('pendente', 'confirmado', 'cancelado', 'concluido');
 
 -- 🚀 Agendamentos
 CREATE TABLE agendamento (
