@@ -12,4 +12,5 @@ public class CadastrarPrestadorDto
     public PrestadorTipo Tipo { get; set; }
     public string Foto { get; set; }  = "";
     public CadastrarUsuarioDto UsuarioDto { get; set;  }
+    public int EnderecoId {get;set;}
 }

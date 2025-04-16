@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -36,7 +37,7 @@ public class AuthRepository : IAuthRepository
 
     return new JwtSecurityTokenHandler().WriteToken(token);
   }
-  
+
   public async Task<Result<string>> TrocarSenha(int userId, string newPassword)
   {
     try
@@ -51,7 +52,7 @@ public class AuthRepository : IAuthRepository
           command.Parameters.AddWithValue("@novaSenha_hash", Bcrypt.HashPassword(newPassword));
 
           await command.ExecuteNonQueryAsync();
-          
+
           await connection.CloseAsync();
         }
       }
@@ -69,33 +70,40 @@ public class AuthRepository : IAuthRepository
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "INSERT INTO usuario(NOME, TELEFONE, EMAIL, FOTO, SENHA_HASH) VALUES(@nome, @telefone, @email, @foto, @senha) returning id";
+        var query = "INSERT INTO usuario(nome, email, telefone, senha_hash, foto, tipo) VALUES(@nome, @email, @telefone, @senha, @foto, @tipo) RETURNING id;";
         using (var command = new NpgsqlCommand(query, connection))
         {
           command.Parameters.AddWithValue("@nome", usuario.Nome);
-          command.Parameters.AddWithValue("@telefone", usuario.Telefone);
           command.Parameters.AddWithValue("@email", usuario.Email);
-          command.Parameters.AddWithValue("@foto", "/Resources/images/user.svg");
+          command.Parameters.AddWithValue("@telefone", usuario.Telefone);
           command.Parameters.AddWithValue("@senha", Bcrypt.HashPassword(usuario.SenhaHash));
+          command.Parameters.AddWithValue("@foto", usuario.Foto);
+          command.Parameters.AddWithValue("@tipo", usuario.Tipo.ToString());
+
           using(var reader = await command.ExecuteReaderAsync())
           {
-            if(await reader.ReadAsync())
+
+            Debug.WriteLine("Depois do ExecuteReaderAsync");
+            if (reader.HasRows && await reader.ReadAsync())
             {
-              return Result<string>.Success(reader.GetString(0),$"Cadastrada usuario com sucesso: {usuario.Nome}");
+                var id = reader.GetInt32(0);
+                Debug.WriteLine($"ID retornado: {id}");
+                return Result<string>.Success(id.ToString(), $"Cadastrado Usuario com sucesso: {usuario.Nome}");
             }
+      
+            
           }
-          
         }
       }
-      
-      return Result<string>.Error($"Erro ao aqui Cadastrar usuari");
+
+      return Result<string>.Error($"Erro ao Cadastrar usuario");
     }
     catch (Exception e)
     {
-      return Result<string>.Error($"Erro ao aqui Cadastrar usuario: {e.Message}");
+      return Result<string>.Error($"Erro ao Cadastrar usuario: {e.Message}");
     }
   }
-  
+
   public async Task<Result<string>> CadastrarPrestador(Prestador prestador)
   {
 
@@ -104,21 +112,29 @@ public class AuthRepository : IAuthRepository
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "INSERT INTO PRESTADOR(NOME, NIF, TELEFONE) VALUES(@NOME, @NIF, @TELEFONE)";
+        var query = "INSERT INTO PRESTADOR(NOME, NIF, TELEFONE, usuario_id, descricao, tipo, foto, endereco_id) VALUES(@NOME, @NIF, @TELEFONE, @usuarioId, @descricao, @tipo, @foto, @endereco_id)";
         using (var command = new NpgsqlCommand(query, connection))
         {
-          command.Parameters.AddWithValue("@NOME", prestador.Nome );
-          command.Parameters.AddWithValue("@NIF", prestador.Nif); 
+          command.Parameters.AddWithValue("@NOME", prestador.Nome);
+          command.Parameters.AddWithValue("@NIF", prestador.Nif);
+          command.Parameters.AddWithValue("@TELEFONE", prestador.Telefone);
+          command.Parameters.AddWithValue("@usuarioId", prestador.UsuarioId);
+          command.Parameters.AddWithValue("@descricao", prestador.Descricao);
+          command.Parameters.AddWithValue("@tipo", prestador.Tipo.ToString());
+          command.Parameters.AddWithValue("@foto", prestador.Foto);
+          command.Parameters.AddWithValue("@endereco_id", prestador.EnderecoId);
+          
           await command.ExecuteScalarAsync();
         }
       }
-      return Result<string>.Success($"Cadastrada usuario com sucesso: {prestador.Nome}");
-    }catch (Exception e)
+      return Result<string>.Success($"Cadastrada prestador com sucesso: {prestador.Nome}");
+    }
+    catch (Exception e)
     {
       return Result<string>.Error($"Erro ao Cadastrar prestador: {e.Message}");
     }
-    
-    
+
+
   }
 
 
