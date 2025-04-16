@@ -24,8 +24,8 @@ public class EnderecoRepository : IEnderecoRepository
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var queryInsert = "insert into endereco(numero, rua, cidade, provinciaId, cep, latitude, longitude, usuarioId, principal)";
-                var queryValues = "Values(@numero, @rua, @cidade, @provinciaId, @cep, @latitude, @longitude, @usuarioId, @principal)";
+                var queryInsert = "insert into endereco(numero, rua, cidade, estado_provincia_id, cep, latitude, longitude)";
+                var queryValues = "Values(@numero, @rua, @cidade, @provinciaId, @cep, @latitude, @longitude)";
 
                 using (var command = new NpgsqlCommand($"{queryInsert} {queryValues}", connection))
                 {
@@ -36,8 +36,6 @@ public class EnderecoRepository : IEnderecoRepository
                     command.Parameters.AddWithValue("@cep", endereco.Cep);
                     command.Parameters.AddWithValue("@latitude", endereco.Latitude);
                     command.Parameters.AddWithValue("@longitude", endereco.Longitude);
-                    command.Parameters.AddWithValue("@usuarioId", endereco.UsuarioId);
-                    command.Parameters.AddWithValue("@principal", endereco.Principal);
                     
                     await command.ExecuteNonQueryAsync();
                 }
