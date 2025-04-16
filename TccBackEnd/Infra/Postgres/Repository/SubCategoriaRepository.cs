@@ -31,7 +31,7 @@ public class SubCategoriaRepository : ISubCategoriaRepository
                     command.Parameters.AddWithValue("@Nome", subCategoria.Nome);
                     command.Parameters.AddWithValue("@Tipo", subCategoria.Tipo.ToString());
                     command.Parameters.AddWithValue("@CategoriaId", subCategoria.CategoriaId);
-
+                    command.Parameters.AddWithValue("@Descricao", subCategoria.Descricao);
                     int rowsAffected = await command.ExecuteNonQueryAsync();
 
                     if (rowsAffected > 0)
@@ -115,7 +115,7 @@ public class SubCategoriaRepository : ISubCategoriaRepository
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var query = "SELECT id, nome, tipo, categoriaid FROM subcategoria";
+                var query = "SELECT id, nome, tipo, categoriaid, descricao FROM subcategoria";
 
                 using (var command = new NpgsqlCommand(query, connection))
                 {
@@ -128,8 +128,9 @@ public class SubCategoriaRepository : ISubCategoriaRepository
                                 {
                                     Id = reader.GetInt32(0),
                                     Nome = reader.GetString(1),
+                                    Tipo = (SubCategoriaTipo)Enum.Parse(typeof(SubCategoriaTipo), reader.GetString(2)),
                                     CategoriaId = reader.GetInt32(3),
-                                    Tipo = (SubCategoriaTipo)Enum.Parse(typeof(SubCategoriaTipo), reader.GetString(2))
+                                    Descricao = reader.GetString(4)
                                 }
                             );
                         }
