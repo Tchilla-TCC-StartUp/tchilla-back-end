@@ -31,7 +31,7 @@ public class CadastrarPrestadorUseCase
         var registrarUsuario = await _repository.CadastrarUsuario(novoUsuario);
         if (!registrarUsuario.IsSuccess || string.IsNullOrEmpty(registrarUsuario.Data))
         {
-            return Result<string>.Error("Erro ao cadastrar usuário." );
+            return Result<string>.Error($"Erro ao Cadastrar usuário");
         }
 
         var novoPrestador = new Prestador()
@@ -41,11 +41,11 @@ public class CadastrarPrestadorUseCase
             Foto = dto.Foto,
             Nif = dto.Nif,
             Tipo = dto.Tipo,
-            UsuarioId = int.Parse(registrarUsuario.Data)
+            UsuarioId = int.Parse(registrarUsuario.Data),
+            EnderecoId = dto.EnderecoId,
+            Telefone = dto.UsuarioDto.Telefone
         };
         
-        return (registrarUsuario.IsSuccess) 
-        ?  (Result<string>) await _repository.CadastrarPrestador(novoPrestador)
-        : Result<string>.Error("Não foi possível realizar está operação");
+        return await _repository.CadastrarPrestador(novoPrestador);
     }
 }

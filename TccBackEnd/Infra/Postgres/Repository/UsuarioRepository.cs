@@ -59,13 +59,7 @@ public class UsuarioRepository : IUsuarioRepository
                     command.Parameters.AddWithValue("@senha", Bcrypt.HashPassword(usuario.SenhaHash));
                     command.Parameters.AddWithValue("@foto", usuario.Foto);
                     command.Parameters.AddWithValue("@tipo", usuario.Tipo.ToString());
-                    using(var reader = await command.ExecuteReaderAsync())
-          {
-            if(await reader.ReadAsync())
-            {
-              return Result<string>.Success(reader.GetString(0),$"Cadastrada um,suario com sucesso: {usuario.Nome}");
-            }
-          }
+                    await command.ExecuteNonQueryAsync();
                 }
             }
 
