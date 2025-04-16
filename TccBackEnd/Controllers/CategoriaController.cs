@@ -49,8 +49,8 @@ public class CategoriaController : ControllerBase
   }
 
   [Authorize]
-  [HttpDelete("Delete")]
-  public async Task<IActionResult> RemoverCategoria([FromBody] int id)
+  [HttpDelete("Delete/{id}")]
+  public async Task<IActionResult> RemoverCategoria(int id)
   {
     var userId = User.FindFirstValue("id");
         if (userId == null)
