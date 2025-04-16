@@ -16,10 +16,13 @@ namespace TccBackEnd.UseCases.Categoria.Cadastrar;
 
         public async Task<Result<string>> Executar(CategoriaDto dto)
         {
+            string filePath = Util.StorageUtil.UploadFile(dto.Foto, "Categoria");
+
            var novaCategoria = new Domain.Entities.Categoria
             {
                 Nome = dto.Nome,
-                Descricao = dto.Descricao
+                Descricao = dto.Descricao,
+                Foto = filePath
             };
             return await _repository.CriarCategoria(novaCategoria);
         }

@@ -20,7 +20,7 @@ public class CategoriaController : ControllerBase
 
   [Authorize]
   [HttpPost("create")]
-  public async Task<IActionResult> CriarCategoria([FromBody] CategoriaDto dto)
+  public async Task<IActionResult> CriarCategoria([FromForm] CategoriaDto dto)
   {
     var userId = User.FindFirstValue("id");
         if (userId == null)
