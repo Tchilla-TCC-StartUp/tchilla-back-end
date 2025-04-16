@@ -22,6 +22,6 @@ public class StorageUtil
         }
 
         // Retorna a URL relativa que pode ser usada no front
-        return $"/{folderName}/{uniqueFileName}";
+        return $"assets/{folderName}/{uniqueFileName}";
     }
 }

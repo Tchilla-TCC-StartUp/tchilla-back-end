@@ -19,13 +19,13 @@ public class CategoriaRepository : ICategoriaRepository
       using (var connection = new Npgsql.NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync(); 
-        var query = "INSERT INTO categoria (nome, descricao) VALUES (@Nome, @Descricao)";
+        var query = "INSERT INTO categoria (nome, descricao, foto) VALUES (@Nome, @Descricao, @Foto)";
         
         using (var command = new Npgsql.NpgsqlCommand(query, connection))
         {
           command.Parameters.AddWithValue("@Nome", categoria.Nome);
           command.Parameters.AddWithValue("@Descricao", categoria.Descricao);
-
+          command.Parameters.AddWithValue("@Foto", categoria.Foto);
           int rowsAffected = await command.ExecuteNonQueryAsync();
           
           if (rowsAffected > 0)
@@ -123,7 +123,8 @@ public class CategoriaRepository : ICategoriaRepository
                 {
                   Id = reader.GetInt32(0),
                   Nome = reader.GetString(1),
-                  Descricao = reader.GetString(2)
+                  Descricao = reader.GetString(2),
+                  Foto = reader.GetString(3)
                 }
               );
             }
@@ -136,7 +137,7 @@ public class CategoriaRepository : ICategoriaRepository
     }
     catch (Exception ex)
     {
-      return Result<List<CategoriaOutPutDto>>.Error($"Erro ao carregar categorias");
+      return Result<List<CategoriaOutPutDto>>.Error($"Erro ao carregar categorias {ex}");
     }
   }
 }
