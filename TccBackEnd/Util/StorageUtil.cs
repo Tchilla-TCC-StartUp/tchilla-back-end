@@ -22,6 +22,6 @@ public class StorageUtil
         }
 
         // Retorna a URL relativa que pode ser usada no front
-        return $"assets/{folderName}/{uniqueFileName}";
+        return $"https://ecotrack-udd9.onrender.com/assets/{folderName}/{uniqueFileName}";
     }
 }
