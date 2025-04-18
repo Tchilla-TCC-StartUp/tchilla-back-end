@@ -107,6 +107,9 @@ builder.Services.AddScoped<ObterTodosPorPesquisaUsuarioUseCase>();
 builder.Services.AddScoped<DeletarUsuarioUseCase>();
 
 builder.Services.AddScoped<IPrestadorRepository>(provider => new PrestadorServicoRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<PrestadorService>();
+builder.Services.AddScoped<ObterTodosPrestadorUseCase>();
+
 
 builder.Services.AddScoped<IAuthRepository>(provider => new AuthRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<AuthService>();

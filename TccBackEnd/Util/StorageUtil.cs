@@ -24,4 +24,13 @@ public class StorageUtil
         // Retorna a URL relativa que pode ser usada no front
         return $"https://ecotrack-udd9.onrender.com/assets/{folderName}/{uniqueFileName}";
     }
+
+    public static void RemoveFile(string url)
+    {
+        string filePath = url.Replace("https://ecotrack-udd9.onrender.com/assets/", Directory.GetCurrentDirectory());
+        if(System.IO.File.Exists(url))
+        {
+            System.IO.File.Delete(url);
+        }
+    }
 }

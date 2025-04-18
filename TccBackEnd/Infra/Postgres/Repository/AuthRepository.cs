@@ -112,12 +112,13 @@ public class AuthRepository : IAuthRepository
       using (var connection = new NpgsqlConnection(_connectionString))
       {
         await connection.OpenAsync();
-        var query = "INSERT INTO PRESTADOR(NOME, NIF, TELEFONE, usuario_id, descricao, tipo, foto, endereco_id) VALUES(@NOME, @NIF, @TELEFONE, @usuarioId, @descricao, @tipo, @foto, @endereco_id)";
+        var query = "INSERT INTO PRESTADOR(NOME, NIF, TELEFONE, email, usuario_id, descricao, tipo, foto, endereco_id) VALUES(@NOME, @NIF, @TELEFONE, @EMAIL, @usuarioId, @descricao, @tipo, @foto, @endereco_id)";
         using (var command = new NpgsqlCommand(query, connection))
         {
           command.Parameters.AddWithValue("@NOME", prestador.Nome);
           command.Parameters.AddWithValue("@NIF", prestador.Nif);
           command.Parameters.AddWithValue("@TELEFONE", prestador.Telefone);
+          command.Parameters.AddWithValue("@EMAIL", prestador.Email);
           command.Parameters.AddWithValue("@usuarioId", prestador.UsuarioId);
           command.Parameters.AddWithValue("@descricao", prestador.Descricao);
           command.Parameters.AddWithValue("@tipo", prestador.Tipo.ToString());

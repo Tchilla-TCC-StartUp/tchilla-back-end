@@ -37,6 +37,7 @@ public class CadastrarPrestadorUseCase
         var novoPrestador = new Prestador()
         {
             Nome = dto.Nome,
+            Email = dto.Email,
             Descricao = dto.Descricao,
             Foto = dto.Foto,
             Nif = dto.Nif,
