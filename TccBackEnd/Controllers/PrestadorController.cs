@@ -11,10 +11,11 @@ namespace TccBackEnd.Controllers;
 public class PrestadorController : ControllerBase
 {
     private readonly ILogger<PrestadorController> _logger;
-    private readonly LocalService _localService;
-    public PrestadorController(ILogger<PrestadorController> logger)
+    private readonly PrestadorService _prestadorService;
+    public PrestadorController(ILogger<PrestadorController> logger, PrestadorService prestadorService)
     {
         _logger = logger;
+        _prestadorService = prestadorService;
     }
 
     [Authorize]
@@ -35,42 +36,42 @@ public class PrestadorController : ControllerBase
         return Ok();
     }
     
-    [Authorize]
-    [HttpPut("update")]
-    public async Task<IActionResult> Update(CadastrarLocalDto dto)
-    {
-        var userIdClaim = User.FindFirst("id");
-        if (userIdClaim == null)
-            return Unauthorized(new { Error = "Usuário não autenticado" });
+    // [Authorize]
+    // [HttpPut("update")]
+    // public async Task<IActionResult> Update(CadastrarLocalDto dto)
+    // {
+    //     var userIdClaim = User.FindFirst("id");
+    //     if (userIdClaim == null)
+    //         return Unauthorized(new { Error = "Usuário não autenticado" });
         
-        int userId = int.Parse(userIdClaim.Value);
+    //     int userId = int.Parse(userIdClaim.Value);
     
-        var result = await _localService.Atualizar.Executar(userId, dto);
-        _logger.LogInformation("Solicitação de cadastro de local de eventos");
-        return result.IsSuccess
-            ? Ok(result)
-            : BadRequest(new { Error = result.ErrorMessage });
-    }
+    //     var result = await _prestadorService.Cadastrar.Executar(userId, dto);
+    //     _logger.LogInformation("Solicitação de cadastro de local de eventos");
+    //     return result.IsSuccess
+    //         ? Ok(result)
+    //         : BadRequest(new { Error = result.ErrorMessage });
+    // }
     
-    [AllowAnonymous]
-    [HttpGet("get/{id:int}")]
-    public async Task<IActionResult> GetById(int id, CadastrarLocalDto dto)
-    {
-        var userIdClaim = User.FindFirst("id");
-        if (userIdClaim == null)
-            return Unauthorized(new { Error = "Usuário não autenticado" });
+    // [AllowAnonymous]
+    // [HttpGet("get/{id:int}")]
+    // public async Task<IActionResult> GetById(int id, CadastrarLocalDto dto)
+    // {
+    //     var userIdClaim = User.FindFirst("id");
+    //     if (userIdClaim == null)
+    //         return Unauthorized(new { Error = "Usuário não autenticado" });
         
-        int userId = int.Parse(userIdClaim.Value);
+    //     int userId = int.Parse(userIdClaim.Value);
     
-        var result = await _localService.ObterPorId.Executar(userId, dto);
-        _logger.LogInformation("Solicitação de cadastro de local de eventos");
-        return result.IsSuccess
-            ? Ok(result)
-            : BadRequest(new { Error = result.ErrorMessage });
-    }
+    //     var result = await _prestadorService.ObterPorId.Executar(userId, dto);
+    //     _logger.LogInformation("Solicitação de cadastro de local de eventos");
+    //     return result.IsSuccess
+    //         ? Ok(result)
+    //         : BadRequest(new { Error = result.ErrorMessage });
+    // }
     [AllowAnonymous]
     [HttpGet("getAll")]
-    public async Task<IActionResult> GetAll(CadastrarLocalDto dto)
+    public async Task<IActionResult> GetAll()
     {
         var userIdClaim = User.FindFirst("id");
         if (userIdClaim == null)
@@ -78,7 +79,7 @@ public class PrestadorController : ControllerBase
         
         int userId = int.Parse(userIdClaim.Value);
     
-        var result = await _localService.Cadastrar.Executar(userId, dto);
+        var result = await _prestadorService.ObterTodos.Executar();
         _logger.LogInformation("Solicitação de cadastro de local de eventos");
         return result.IsSuccess
             ? Ok(result)
